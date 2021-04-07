@@ -156,6 +156,217 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java集合Collection——List接口02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A302/">Java集合Collection——List接口02</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A302/" class="archive-article-date">
+  	<time datetime="2021-04-07T11:02:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="List接口-02"><a href="#List接口-02" class="headerlink" title="List接口-02"></a>List接口-02</h2><h3 id="ArrayList子类"><a href="#ArrayList子类" class="headerlink" title="ArrayList子类"></a>ArrayList子类</h3><h4 id="ArrayList子类特点"><a href="#ArrayList子类特点" class="headerlink" title="ArrayList子类特点"></a>ArrayList子类特点</h4><p>1.ArrayList类可以加入任何值，加入null,也可以加入多个null</p>
+<p>2.ArrayList底层由数组来实现的</p>
+<p>3.但是ArrayList线程不安全，可是执行效率高，在多线程情况下不建议使用ArrayList</p>
+<p>add方法源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public boolean add(E e)</span><br><span class="line">&#123;</span><br><span class="line">    ensureCapacityInternal(size+1);</span><br><span class="line">    elementDatal[size++]&#x3D;e;</span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>源码中没有synchronized同步，就没有线程安全的控制</em></p>
+<h4 id="ArrayList的底层机制与源码分析"><a href="#ArrayList的底层机制与源码分析" class="headerlink" title="ArrayList的底层机制与源码分析"></a>ArrayList的底层机制与源码分析</h4><p>1.ArrayList维护了一个Object类型的数组——elementData.transient Object[] elementData</p>
+<p><em>transient表示瞬间的、短暂的，也就是当对象被该关键字修饰时，表示该属性不会被序列化</em></p>
+<p>2.当创建ArrayList对象时，如果使用的时无参构造器ArrayList()，则初始的elementData容量为0，第一次添加数据，扩容为10；以后再次扩容elementData为1.5倍</p>
+<p>3.如果使用的是指定大小的构造器，初始的elementData容量为指定大小；如果需要扩容，则直接扩容为elementData的1.5倍，后续都是前者的1.5倍，以此类推</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A302/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java集合Collection——List接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A3/">Java集合Collection——List接口</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A3/" class="archive-article-date">
+  	<time datetime="2021-04-07T08:14:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="List接口-01"><a href="#List接口-01" class="headerlink" title="List接口-01"></a>List接口-01</h2><h3 id="List特点"><a href="#List特点" class="headerlink" title="List特点"></a>List特点</h3><p>1.List是Collection接口的子接口</p>
+<p>2.List集合中元素有序，元素可以重复，按照存放的顺序来取出元素</p>
+<p>3.List接口中的每一个元素都有其对应的顺序索引，也就是List的底层为数组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.get(index);&#x2F;&#x2F;也就是支持get(index)通过索引获取数据index从0开始</span><br></pre></td></tr></table></figure>
+
+<p>4.Java API中实现List接口的类很多：Vector、ArrayList、LinkedList、Stack…</p>
+<h3 id="List常用方法"><a href="#List常用方法" class="headerlink" title="List常用方法"></a>List常用方法</h3><p>1.指定位置插入元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void add(int index,Object ele);</span><br></pre></td></tr></table></figure>
+
+<p>当不指定index时，默认插入到List的末尾</p>
+<p>2.指定位置插入集合元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">boolean addAll(int index,Collection eles);</span><br></pre></td></tr></table></figure>
+
+<p>3.获取指定位置元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object get(int index);</span><br></pre></td></tr></table></figure>
+
+<p>4.返回obj在集合中首次出现的位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int indexOf(Object obj);</span><br></pre></td></tr></table></figure>
+
+<p>5.返回obj在集合中最后一次出现的位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int lastIndexOf(Object obj);</span><br></pre></td></tr></table></figure>
+
+<p>6.移除指定index位置的元素，并返回此元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object remove(int index);</span><br></pre></td></tr></table></figure>
+
+<p>7.替换某位置的元素为另一个值:当没有这个index时，控制台报错：IndexOutOfBoundException</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object set(int index, Object ele);</span><br></pre></td></tr></table></figure>
+
+<p>8.返回从fromIndex到toIndex的集合</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List subList(int fromIndex,int toIndex);</span><br></pre></td></tr></table></figure>
+
+<p>但是实际返回的集合是下标[fromIndex,toIndex-1]!!!</p>
+<h3 id="List常用遍历方法"><a href="#List常用遍历方法" class="headerlink" title="List常用遍历方法"></a>List常用遍历方法</h3><h4 id="iterator模式"><a href="#iterator模式" class="headerlink" title="iterator模式"></a>iterator模式</h4><h4 id="增强for模式"><a href="#增强for模式" class="headerlink" title="增强for模式"></a>增强for模式</h4>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A3/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-粤语歌——《完》" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -633,6 +844,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Java API</a>
+              </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
