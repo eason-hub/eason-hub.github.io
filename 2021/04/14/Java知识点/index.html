@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hello World | 07♥的主页</title>
+  <title>Java知识点 | 07♥的主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="区别equals、hashCode()和&#x3D;&#x3D;&#x3D;&#x3D;说明： 对于8个基本数据类型，判断的是操作数的值是否相等 两个类对象&#x3D;&#x3D;判断，是判断其在栈中所指向的堆中的地址值 1234String s1&#x3D;&quot;tom&quot;;String s2&#x3D;&quot;tom&quot;;System.out.println(s1&#x3D;&#x3D;s2);&#x2F;&#x2F;返回结果">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2021/04/02/hello-world/index.html">
+<meta property="og:title" content="Java知识点">
+<meta property="og:url" content="http://example.com/2021/04/14/Java%E7%9F%A5%E8%AF%86%E7%82%B9/index.html">
 <meta property="og:site_name" content="07♥的主页">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="区别equals、hashCode()和&#x3D;&#x3D;&#x3D;&#x3D;说明： 对于8个基本数据类型，判断的是操作数的值是否相等 两个类对象&#x3D;&#x3D;判断，是判断其在栈中所指向的堆中的地址值 1234String s1&#x3D;&quot;tom&quot;;String s2&#x3D;&quot;tom&quot;;System.out.println(s1&#x3D;&#x3D;s2);&#x2F;&#x2F;返回结果">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-04-02T08:17:44.819Z">
-<meta property="article:modified_time" content="2021-04-02T08:17:44.819Z">
+<meta property="article:published_time" content="2021-04-14T09:46:10.000Z">
+<meta property="article:modified_time" content="2021-04-14T09:47:26.825Z">
 <meta property="article:author" content="lqx">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="07♥的主页" type="application/atom+xml">
@@ -158,40 +159,95 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hello-world" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Java知识点" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      Java知识点
     </h1>
   
 
         
-        <a href="/2021/04/02/hello-world/" class="archive-article-date">
-  	<time datetime="2021-04-02T08:17:44.819Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-02</time>
+        <a href="/2021/04/14/Java%E7%9F%A5%E8%AF%86%E7%82%B9/" class="archive-article-date">
+  	<time datetime="2021-04-14T09:46:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-14</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+        <h3 id="区别equals、hashCode-和"><a href="#区别equals、hashCode-和" class="headerlink" title="区别equals、hashCode()和=="></a>区别equals、hashCode()和==</h3><p><strong>==说明：</strong></p>
+<p>对于8个基本数据类型，判断的是操作数的值是否相等</p>
+<p>两个类对象==判断，是判断其在栈中所指向的堆中的地址值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String s1&#x3D;&quot;tom&quot;;</span><br><span class="line">String s2&#x3D;&quot;tom&quot;;</span><br><span class="line">System.out.println(s1&#x3D;&#x3D;s2);</span><br><span class="line">&#x2F;&#x2F;返回结果为true</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>这里第一个s1在JVM的堆的常量池中已经创建了一个叫做”tom”的常量，s1存放的是堆中的地址</p>
+<p>在s2时，因为常量池中已经有了一个”tom”，所以s2也指向该”tom”，s1与s2的指向地址相同</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String s1&#x3D;&quot;tom&quot;;</span><br><span class="line">String s2&#x3D;new String(&quot;tom&quot;);</span><br><span class="line">System.out.println(s1&#x3D;&#x3D;s2);</span><br><span class="line">&#x2F;&#x2F;返回结果为false</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>这里new之后相当于在堆内存中重新开辟一段新的空间去存储”tom”，因此s1,s2指向的地址不相同</p>
+<p>反过来看equals源码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public boolean equals(Object anObject)&#123;</span><br><span class="line">    if(this&#x3D;&#x3D;anObject)&#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;&#x2F;&#x2F;首先判断s1和s2 &#x3D;&#x3D;来比较地址值是否相同，不相同的话，往下进行</span><br><span class="line">    </span><br><span class="line">    if(anObject instanceof String)&#123;&#x2F;&#x2F;instanceof用来判断传入的值是否为String类型的实例，如果不是直接false</span><br><span class="line">    </span><br><span class="line">        String anotherString &#x3D; (String) anObject;&#x2F;&#x2F;将s2转换为String</span><br><span class="line">        int n&#x3D;this.value.length;&#x2F;&#x2F;获取s1的长度</span><br><span class="line">        if(n &#x3D;&#x3D; anotherString.value.length)&#123;&#x2F;&#x2F;首先判断两者长度是否相同，不同就直接false</span><br><span class="line">        char v1[] &#x3D; value;</span><br><span class="line">        char v2[] &#x3D; anotherString.value;</span><br><span class="line">        &#x2F;&#x2F;拆分字符串为数组[&#39;t&#39;,&#39;o&#39;,&#39;m&#39;]</span><br><span class="line">        int i&#x3D;0;</span><br><span class="line">        while(n-- !&#x3D;0)&#123;</span><br><span class="line">            if(v1[i]!&#x3D;v2[i])</span><br><span class="line">                return false;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        return true;&#x2F;&#x2F;字符串完全相同，返回true</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p><strong>equals说明：</strong></p>
+<p>1.equals在Object中比较的还是对象的内存地址，而String方法对equals进行了重写，因此String中比较的就是对象的值；</p>
+<p>2.String类型创建对象首先要看zai在JVM的堆常量池中是否有相同的要创建的值，如果有就赋给当前的引用</p>
+<p><strong>hashCode()说明：</strong></p>
+<p>hashCode()是Object中的native方法，用于获取对象的哈希值，用于确定该对象在哈希表中的索引位置</p>
+<p>也就是将数据的内部存储地址转换成一个整数然后返回</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public native int hashCode();</span><br></pre></td></tr></table></figure>
 
+
+
+<p>hashCode()的存在也决定了数据在哈希表中的存储方式：</p>
+<p>//这里有个图片 ./blog/source/2.jpg</p>
+<p>要放入到哈希表中的元素首先要经历一些判断：</p>
+<p>（1）通过hashCode()来获取hash值，这个值也就是通过哈希函数获取的在数组中的位置值，根据哈希函数的运算规则，这个值有可能相同，不同的话，那就绝对不存在这个对象，可以创建新的空间放入到集合中</p>
+<p>（2）如果hash的值相同，但是也不等说明两个完全一样，要进行equals判断，发现与已经存在的对象equals值也相同的话，就可以舍弃；否则创建该对象</p>
+<p><strong>这就得到了hashCode()和equals的关系：</strong></p>
+<ul>
+<li>如果重写了equals方法，有必要重写hashCode()方法的φ(*￣0￣)这是为啥。。。</li>
+<li>两个对象equals()返回为true，则hashCode()必为true</li>
+</ul>
+<ul>
+<li><p>两个对象equals()返回false，则hashCode()不一定就不同</p>
+</li>
+<li><p>两个对象hashCode()返回相同int，则equals()返回不一定为true</p>
+</li>
+<li><p>两个对象hashCode()返回不同int，则equals()返回必定为false</p>
+</li>
+</ul>
+<h3 id="基本数据类型所占字节大小"><a href="#基本数据类型所占字节大小" class="headerlink" title="基本数据类型所占字节大小"></a>基本数据类型所占字节大小</h3><p>此处有图片./blog/source/3.png</p>
+<p><strong>基本数据类型和对应的包装类的区分</strong></p>
+<p>Integer和int区别:</p>
+<p>Integer是int的包装类，int是Java的基本数据类型</p>
+<p>Integer要实例化才使用，int不用</p>
+<p>Integer默认为null,int为0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer i &#x3D; new Integer(100);</span><br><span class="line">int j &#x3D; 100；</span><br><span class="line">System.out.print(i &#x3D;&#x3D; j); &#x2F;&#x2F;true</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Integer和int相比较的时候，只要值相同结果相等，比较时Java将Integer自动拆包装为int</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer i &#x3D; new Integer(100);</span><br><span class="line">Integer j &#x3D; 100;</span><br><span class="line">System.out.print(i &#x3D;&#x3D; j); &#x2F;&#x2F;false</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当变量值在-128~127，非new生成的Integer对象是常量池的中的，而new生成的是堆中新建的，内存地址不同；</p>
+<p>当不在区间时，非new生成的最终按照new处理，两个地址同样不同</p>
+<p>也解释了下面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Integer i &#x3D; 100;</span><br><span class="line">Integer j &#x3D; 100;</span><br><span class="line">System.out.print(i &#x3D;&#x3D; j); &#x2F;&#x2F;true</span><br><span class="line"></span><br><span class="line">Integer i &#x3D; 128;</span><br><span class="line">Integer j &#x3D; 128;</span><br><span class="line">System.out.print(i &#x3D;&#x3D; j); &#x2F;&#x2F;false</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+<h3 id="Java中this详解"><a href="#Java中this详解" class="headerlink" title="Java中this详解"></a>Java中this详解</h3><p><strong>this指向的是当前对象的引用</strong><br><strong>this.方法名称</strong>——用来访问本类的成员方法</p>
+<h3 id="Java中的块-以及实例化和初始化顺序"><a href="#Java中的块-以及实例化和初始化顺序" class="headerlink" title="Java中的块{}以及实例化和初始化顺序"></a>Java中的块{}以及实例化和初始化顺序</h3><p>1.{}定义在方法中，就是调用方法的时候执行</p>
+<p>2.{}定义在类中，方法外，表示一个构造块；在创建对象的时候，首先找构造器，有构造块，先执行块中内容，再执行构造器中内容</p>
+<p>3.static{}定义在类中，方法外，表示一个静态块；在第一次类加载完毕后执行，并且只执行一次，静态块优先于方法执行</p>
+<p>4.synchronized(){}同步代码块，写在方法中</p>
+<p><strong>执行顺序：静态块(静态变量：按照编写顺序来，并且都只加载一次)→主方法（main）→成员变量、构造块（按照编写顺序来）→构造器代码→静态方法（调用了才加载）</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class Demo &#123;</span><br><span class="line"></span><br><span class="line">    int a &#x3D; print(3);&#x2F;&#x2F;5.加载成员变量，调用print(3)，输出&quot;实例3&quot;</span><br><span class="line">    public Demo() &#123;</span><br><span class="line">        System.out.println(&quot;构造方法&quot;);&#x2F;&#x2F;8.最后执行构造方法</span><br><span class="line">    &#125;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(&quot;非静态块&quot;);&#x2F;&#x2F;6.顺序执行到非静态块，输出&quot;非静态块&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    int b &#x3D; print(4);&#x2F;&#x2F;7.加载成员变量，调用print(4)，输出&quot;实例4&quot;</span><br><span class="line">    public int print(int value) &#123;</span><br><span class="line">        System.out.println(&quot;实例&quot; + value);</span><br><span class="line">        return value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static int i &#x3D; printStatic(1);&#x2F;&#x2F;1.加载静态变量，调用方法printStatic()，输出&quot;静态1&quot;</span><br><span class="line">    static &#123;</span><br><span class="line">        System.out.println(&quot;静态块&quot;);</span><br><span class="line">    &#125;&#x2F;&#x2F;2.按照顺序加载静态块，输出&quot;静态块&quot;</span><br><span class="line">    static int j &#x3D; printStatic(2);&#x2F;&#x2F;3.调用printStatic()，输出&quot;静态块2&quot;</span><br><span class="line">    public static int printStatic(int value) &#123;</span><br><span class="line">        System.out.println(&quot;静态&quot; + value);</span><br><span class="line">        return value;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Demo();&#x2F;&#x2F;4.开始执行主方法，到了类实例化过程</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
       
 
       
@@ -220,7 +276,29 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
 
       
 
@@ -270,7 +348,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/04/02/hello-world/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/04/14/Java%E7%9F%A5%E8%AF%86%E7%82%B9/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,15 +362,20 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/04/02/%E6%89%8B%E6%92%95%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%9F%A5%E6%89%BE/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/04/14/JVM%E6%8E%A2%E7%A9%B6/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          手撕算法——查找
+          JVM探究
         
       </div>
     </a>
   
+  
+    <a href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A302/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java集合Collection——List接口02</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 

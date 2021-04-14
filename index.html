@@ -156,6 +156,564 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-数据库知识点" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/14/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9F%A5%E8%AF%86%E7%82%B9/">数据库知识点</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/14/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9F%A5%E8%AF%86%E7%82%B9/" class="archive-article-date">
+  	<time datetime="2021-04-14T09:50:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="数据库怎么加快查询速度："><a href="#数据库怎么加快查询速度：" class="headerlink" title="数据库怎么加快查询速度："></a>数据库怎么加快查询速度：</h3><p>尽可能优化查询语句，避免使用order by和group by(会占用大量的临时空间，可创建视图来代替)，</p>
+<p>避免使用like等通配符正则表达式，创建索引加快</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM table1 WHERE field1&lt;&#x3D;10000 AND field1&gt;&#x3D;0;</span><br><span class="line">SELECT * FROM table1 WHERE field1&gt;&#x3D;0 AND field1&lt;&#x3D;10000;&#x2F;&#x2F;更好，where语句中把最具限制性的条件放在最前面</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>创建索引：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create index index_name on table_name(column_list) [tablespace tablespace_name]</span><br></pre></td></tr></table></figure>
+
+<p>举个栗子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">如果我们经常对emp表进行按照empno来查询某个员工的信息，</span><br><span class="line">SQL&gt; select * from emp where empno&#x3D;7788;</span><br><span class="line"> </span><br><span class="line">EMPNO ENAME      JOB         MGR HIREDATE          SAL      COMM DEPTNO</span><br><span class="line">----- ---------- --------- ----- ----------- --------- --------- ------</span><br><span class="line"> 7788 SCOTT      ANALYST    7566 1987-4-19     3000.00               20</span><br><span class="line">我们就应该对empno这一列建一个索引。</span><br><span class="line">create index indx_on_empno </span><br><span class="line">on emp(empno) </span><br><span class="line">tablespace users;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">如果我们经常查询某个部门工资大于1000的员工信息，</span><br><span class="line">那么我们就可以在job和sal列上建立所以，这叫组合索引：</span><br><span class="line">SQL&gt; select * from emp</span><br><span class="line">  2  where job&#x3D;&#39;SALESMAN&#39; and sal&gt;1000;</span><br><span class="line"> </span><br><span class="line">EMPNO ENAME      JOB         MGR HIREDATE          SAL      COMM DEPTNO</span><br><span class="line">----- ---------- --------- ----- ----------- --------- --------- ------</span><br><span class="line"> 7499 ALLEN      SALESMAN   7698 1981-2-20     1600.00    300.00     30</span><br><span class="line"> 7521 WARD       SALESMAN   7698 1981-2-22     1250.00    500.00     30</span><br><span class="line"> 7654 MARTIN     SALESMAN   7698 1981-9-28     1250.00   1400.00     30</span><br><span class="line"> 7844 TURNER     SALESMAN   7698 1981-9-8      1500.00      0.00     30</span><br><span class="line"> </span><br><span class="line">create index indx_on_job_sal </span><br><span class="line">on emp(job,sal)</span><br><span class="line">tablespace users;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>数据库索引的底层原理——B树索引</p>
+<p>数据库也好，磁盘查找也好，都是将部分数据调入内存后，进行查找比对，这样就会涉及到一个调入数据进入内存的问题，要调入多少数据进入内存，就是设计数据在外存中的存储的重点了！！！</p>
+<p>B树的结构：<br>图片/5.png</p>
+<p>B树的阶数不像二叉树一样必须是2，而是不限制阶数，因此就可以变得“矮胖的”</p>
+<hr>
+<p>数据库索引的分类：</p>
+<p><strong>唯一索引：</strong></p>
+<p>不允许其中的任何两行具有相同的索引值</p>
+<p>例如在employee表中name上创建索引，就表示任何两个员工都不能具有相同的姓名</p>
+<p><strong>主键索引:</strong></p>
+<p>在数据库创建主键后自动创建主键索引，主键索引也是唯一索引的特殊情况</p>
+<p>聚集索引</p>
+<hr>
+<h3 id="数据库中的锁"><a href="#数据库中的锁" class="headerlink" title="数据库中的锁"></a>数据库中的锁</h3><h4 id="锁的分类："><a href="#锁的分类：" class="headerlink" title="锁的分类："></a>锁的分类：</h4><p>数据库系统角度：<br>排他锁、共享锁、更新锁</p>
+<p>程序员角度：<br>悲观锁、乐观锁</p>
+<h4 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h4><p>悲观锁，像名字一样，每次用到数据的时候都会认为别人会对数据进行修改，所以每次使用数据都会上锁，并且悲观锁增加了死锁的机会</p>
+<p>这种锁都是在操作之前先上锁</p>
+<ul>
+<li>悲观锁按照使用性质划分：</li>
+</ul>
+<p><strong>共享锁（S锁、读锁）</strong>——用于所有的只读操作，并非是独占的，允许多个并发的事务来读取数据，但是任何的事务都不能对其进行修改，读取完毕后，立即释放锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM my_table</span><br><span class="line">&#x2F;&#x2F;先锁定第一页，读取后释放，再锁第二页</span><br><span class="line"></span><br><span class="line">SELECT * FROM my_table HOLDLOCK</span><br><span class="line">&#x2F;&#x2F;要求整个查询的过程中，保持对表的锁定</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>排他锁（X锁、写锁）</strong>——事务为对象设置排他锁后，其他事务不允许读或写，X锁不同于S锁，直到事务结束后才能被释放</p>
+<p><strong>更新锁（U锁）</strong>——在修改操作之前就锁定可能要修改的资源，避免产生死锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">可能产生死锁的原因：</span><br><span class="line">当A事务申请对U资源的共享锁时，B事务也在使用共享锁读P资源数据；然后A事务设置排他锁来对P写数据，但是B事务也要申请排他锁来对U写数据，对方都想等待记录，但是对方都不放资源，造成死锁</span><br><span class="line"></span><br><span class="line">当A事务在写P资源之前，首先对P设置更新锁，这样B事务就不会再对P上锁，不会发生死锁</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>悲观锁按照所用范围划分：</li>
+</ul>
+<p><strong>行锁</strong>、<strong>表锁</strong></p>
+<h4 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h4><p>乐观锁，就是每次使用数据的时候，都认为别人不会进行修改，所以就不会上锁，但是再更新的时候会判断一下在操作期间别人有没有更新这个数据，可以使用版本号机制</p>
+<p><strong>版本号：</strong></p>
+<p>给数据表增加version字段，每次更新将字段+1，读数据的时候将version读入，要更新数据后比较version是否发生了变化：</p>
+<p>发生了变化就反馈给用户，让用户自己判断，可以重新开始，并且这里面判断version和用户更新为一个原子单元执行，否则会出现，判断后没有更新，但是在判断过程中发生了更新，没有反馈给用户的情况</p>
+<p><strong>时间戳</strong>——同版本号</p>
+<p>这里的时间戳不是系统时间而是数据库服务器时间</p>
+<p><strong>待更新字段</strong></p>
+<p>不另外设置时间戳或者版本号等标识，而是直接比较数据库中的某个字段的数据是否发生了改变</p>
+<h4 id="两者不同点"><a href="#两者不同点" class="headerlink" title="两者不同点"></a>两者不同点</h4><p>悲观锁虽然安全，但是也使得数据库效率下降，性能开销变大，对于长事务来说更为明显</p>
+<h4 id="并发控制可能产生的两种不良情况"><a href="#并发控制可能产生的两种不良情况" class="headerlink" title="并发控制可能产生的两种不良情况"></a>并发控制可能产生的两种不良情况</h4><p><strong>死锁</strong></p>
+<p>预防方法：</p>
+<p>一次封锁法、顺序封锁法（更新锁）</p>
+<p><strong>活锁</strong></p>
+<p>按照事务的优先级不同，比如T1事务封锁数据R，之后T2请求封锁R，T3也请求封锁R，T4也请求封锁R，但是这里T2的优先级最低就导致了T2永远也等不到数据，这里可以使用先来先服务策略避免</p>
+<p><strong>对于高并发的情况下建议尽量使用乐观锁</strong></p>
+<p>首先是悲观锁增加了产生死锁的概率，一旦产生死锁，对系统的消耗巨大，长时间限制其他用户的访问，并发性并不好；</p>
+<p>而乐观锁减少了过多的加锁的步骤，提高性能，并且乐观锁出现差错的情况纪律比较小</p>
+<p>乐观锁可能失效的情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">常见的取当前ID字段的最大值＋1作为新ID</span><br><span class="line">版本号字段 version 默认值为 0</span><br><span class="line">用户A读取了某个记录准备修改它</span><br><span class="line">该记录正好是ID最大的记录，且之前没被修改过，version 为默认值 0</span><br><span class="line">在用户A读取完成后，用户B恰好删除了该记录。之后，用户C又插入了一个新记录</span><br><span class="line">此时，阴差阳错的，新插入的记录的ID与用户A读取的记录的ID是一致的， 而版本号两者又都是默认值0</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">数据库知识点</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/计算机知识点//" class="article-tag-list-link color2">计算机知识点</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/14/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9F%A5%E8%AF%86%E7%82%B9/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-计算机网络知识点" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E7%82%B9/">计算机网络知识点</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E7%82%B9/" class="archive-article-date">
+  	<time datetime="2021-04-14T09:49:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Http常见状态码："><a href="#Http常见状态码：" class="headerlink" title="Http常见状态码："></a>Http常见状态码：</h3><p>http状态码表示客户端http请求的返回结果，标记服务器端的处理是否正常或者是出现的错误</p>
+<p>其中第一位指定了相应类别</p>
+<p>1xx 接受的请求正在处理<br>2xx 请求正常处理完毕<br>3xx 需要进行附加操作来完成请求（比如重定向）<br>4xx 客户端请求错误，服务器无法处理<br>5xx 服务器处理请求错误</p>
+<p><strong>2xx</strong><br>200 OK 请求正常处理并返回<br>204 No Content 返回的报文中没有资源返回<br>206 Patial Content </p>
+<p><strong>3xx</strong><br>301 Moved Permanently 永久性重定向 请求的资源被分配了新的URL<br>302 Found 临时重定向，后续可能还会更改URL<br>303 See Other 类似302，但是表明客户端应采取get方式获取资源<br>304 Not Modified<br>307 Temporary Redirect 临时重定向和303相同</p>
+<p><strong>4xx</strong><br>400 Bad Request 报文中存在语法错误<br>401 Unauthorized 未经许可，要通过http认证<br>403 Forbidden 服务器拒绝本次访问<br>404 Not Found 服务器上无法找到请求的资源</p>
+<p><strong>5xx</strong><br>500 Inter Server Error 服务器执行请求时发生错误<br>503 Server Unavailable 服务器暂时处于超负载运行中，无法处理请求</p>
+<h3 id="tcp为什么比udp可靠："><a href="#tcp为什么比udp可靠：" class="headerlink" title="tcp为什么比udp可靠："></a>tcp为什么比udp可靠：</h3><p>tcp是面向连接的而udp无连接直接发送数据</p>
+<p>tcp提供可靠地服务，通过tcp传送的数据，无差错，不丢失，不重复，顺序不变；而udp只是尽可能的交付数据</p>
+<p>tcp在确认客户端接收到完整信息后，才会删除服务端系统中数据缓存</p>
+<p>tcp的可靠服务基于：校验和，重传机制，序号标识，滑动窗口，确认应答</p>
+<p>但是tcp只是点到点的，udp支持多对多传输通信</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">计算机网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/计算机知识//" class="article-tag-list-link color1">计算机知识</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E7%82%B9/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JVM探究" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/14/JVM%E6%8E%A2%E7%A9%B6/">JVM探究</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/14/JVM%E6%8E%A2%E7%A9%B6/" class="archive-article-date">
+  	<time datetime="2021-04-14T09:47:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>本机虚拟机类型——JavaHotSpot</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd→ java -version</span><br></pre></td></tr></table></figure>
+
+<h4 id="JVM位置"><a href="#JVM位置" class="headerlink" title="JVM位置"></a>JVM位置</h4><p>JVM运行在os之上，JVM是使用C写的程序；JRE包含了JVM；</p>
+<p><strong>JDK包含JRE，JRE包含JVM</strong><br>JDK：Java development kit——Java开发工具包<br>JRE：Java runtime environment——Java的运行环境（lib+bin）<br>JVM：Java Virtual machine——Java虚拟机</p>
+<p>Java平台下，所有的Java程序都要在JRE环境下运行，JVM解释class文件的时候，需要调用解释用到的类库lib;但是JRE不包含Java的运行工具（编译器，调试器等）</p>
+<p>JDK就包括了Java的运行环境、工具（javac）、Java基础类库（Java API：Java的应用程序接口，包括已经写好的Java class文件等，可以直接调用）</p>
+<p>但是我的电脑中有两个相同版本的JRE和JDK:</p>
+<p>JDK内外的JRE都可以为Java提供开发的运行环境，但是JDK自带的开发工具只能使用自己的JRE</p>
+<p>实际开发：JDK调用本地API开发Java程序，通过JDK中javac工具编译成Java.class后，在外部JRE上运行字节码文件，JVM来解释.class文件变成机器语言后再不同的os上使用</p>
+<p>11.jpg</p>
+<p><strong>在JVM中垃圾只能存在于堆和方法区中，栈、本地方法栈、程序计数器内不可能有垃圾，也不会有垃圾回收，否则无法弹出的话，最下面的main方法无法弹出，程序没有出口</strong></p>
+<p><strong>因此JVM的调优就是在堆内调优</strong></p>
+<hr>
+<h3 id="类加载器-——-加载-class文件"><a href="#类加载器-——-加载-class文件" class="headerlink" title="类加载器 —— 加载.class文件"></a>类加载器 —— 加载.class文件</h3><p>类加载器主要负责三项任务：<br>载入、链接、初始化</p>
+<p>当new Student()时，该Student类的具体实例<strong>引用</strong>在栈中，而<strong>实例对象</strong>放在堆中</p>
+<p>类加载器包含：<br>虚拟机自带加载器，启动类（根）加载器(EXCClassLoader)（在rt.jar中），扩展类加载器，应用程序加载器（AppClassLoader）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class A</span><br><span class="line">A.getClass();&#x2F;&#x2F;获取类名</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">A.getClassLoader();&#x2F;&#x2F;获取类加载器</span><br><span class="line"></span><br><span class="line">A.getClassLoader().getParent();&#x2F;&#x2F;获取上层父类加载器</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>双亲（上层）委派机制：</strong><br>——向上委托，向下加载</p>
+<p>在类加载器为了生成.class文件时，首先按照如下顺序找到类加载器：</p>
+<p>APP–&gt;EXC–&gt;ROOT–&gt;null(因为Java的底层是用C、C++来写的，丢掉了指针，将内存管理交给JVM来做)</p>
+<p>最后找到根加载器进行加载，没有的话在回退找到加载器，都找不到的话就会报错:Class Not Found</p>
+<p>这样安全性高的机制也必然导致了性能下降</p>
+<hr>
+<p><strong>沙箱安全机制</strong></p>
+<p>对于非本地的代码，在沙箱中运行~<br>没写完(～￣▽￣)～</p>
+<hr>
+<h4 id="Java实例化和初始化的区别"><a href="#Java实例化和初始化的区别" class="headerlink" title="Java实例化和初始化的区别"></a>Java实例化和初始化的区别</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public class A&#123;</span><br><span class="line">    A() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>类的初始化是构造函数完成的，在程序开始run的一瞬间，类以及静态的东西都在内存中开始初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A a&#x3D;new A();&#x2F;&#x2F;实例化</span><br></pre></td></tr></table></figure>
+<p>类的加载只执行一次，也就是初始化一次，只有一个类的对象，而实例化是有一个new就会有一个实例化对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A a&#x3D;null;&#x2F;&#x2F;这只是声明</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p><strong>这也就解释了为什么main是static的情况：</strong></p>
+<p>在Java中所有的程序都是在类的基础上运行的，但是刚刚运行的程序没有任何类，没有类怎么加载类，没有加载类怎么出现类，这样的话就陷入了死循环；</p>
+<p>利用static关键字，因为static不需要依赖实例对象而存在，所以通过static main()来创建一系列的对象，这样就可以继续加载其他的类了</p>
+<hr>
+<h3 id="native关键字"><a href="#native关键字" class="headerlink" title="native关键字"></a>native关键字</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class Demo&#123;</span><br><span class="line">    public void hello();&#x2F;&#x2F;接口报错，只能在抽象类中</span><br><span class="line">    </span><br><span class="line">    public native void hello();&#x2F;&#x2F;成功</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>包含native关键字的方法，不在受到java管辖，而是调用底层C语言的库！</strong></p>
+<p>会进入本地方法栈 Native Method Statck，在调用JNI（Java Native interface）接口找到本地方法接口，在调用本地方法库就可以扩展Java的方法</p>
+<p>在JVM中的本地方法栈中登记了native方法，在最终执行的时候找到本地方法库的方法</p>
+<p>例如Java程序驱动打印机，就可以使用native关键字</p>
+<hr>
+<h3 id="PC程序计数器"><a href="#PC程序计数器" class="headerlink" title="PC程序计数器"></a>PC程序计数器</h3><p>每个线程都有一个程序计数器，是线程私有的，就相当于一个指针，指向下一条要执行的语句</p>
+<hr>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>Java虚拟机中明确说明：方法区 作为堆的一部分，但是是独立于堆的内存空间</p>
+<p>方法区和堆一样，是线程共享的内存区域</p>
+<p>方法区在JVM启动时被创建，和堆一样都是不连续的物理空间，空间大小可以扩展</p>
+<p>方法区的大小决定了可以保存多少类，定义了太多类或者过多的引用第三方的jar包，也会导致方法区溢出</p>
+<p>关闭JVM就会释放这个方法区的内存</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Test&#123;</span><br><span class="line">    private int a;</span><br><span class="line">    private String name&#x3D;&quot;lingqixin&quot;;</span><br><span class="line">    &#x2F;&#x2F;当name赋初值后这个初值就会放在常量池中</span><br><span class="line">    public static void main(String[] args)</span><br><span class="line">    &#123;</span><br><span class="line">        Test test1&#x3D;new Test();</span><br><span class="line">        test1.name&#x3D;&quot;new lingqixin&quot;;</span><br><span class="line">        &#x2F;&#x2F;要是没有被赋新的值，就要从常量池中获得</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h3 id="JVM中的堆和栈"><a href="#JVM中的堆和栈" class="headerlink" title="JVM中的堆和栈"></a>JVM中的堆和栈</h3><p>1.栈：</p>
+<p><strong>线程结束，栈就会Over</strong></p>
+<p>栈中存放的内容：</p>
+<p>函数中定义的八大基本类型（char,short,int,float,double,long,boolean,byte)以及引用变量都在栈中分配（就相当于数组的名称）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int a&#x3D;3;</span><br><span class="line">int b&#x3D;3;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>2.堆：</p>
+<p>栈是线程级别的，但是一个JVM只有一个堆</p>
+<p>当类加载器加载了类后，会将该类的方法，常量值，变量值，保存引用值的对象</p>
+<p>堆内存分成三个区域：</p>
+<p>新生代：伊甸园（new产生）、幸存区0、幸存区1<br>老年代：<br>永久代（jdk1.8后被元空间取代）！！</p>
+<p>GC垃圾回收主要在伊甸园和老年代</p>
+<p>当出现OOM的堆内存满了的错误时</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">JVM</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java原理//" class="article-tag-list-link color2">Java原理</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/14/JVM%E6%8E%A2%E7%A9%B6/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java知识点" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/14/Java%E7%9F%A5%E8%AF%86%E7%82%B9/">Java知识点</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/14/Java%E7%9F%A5%E8%AF%86%E7%82%B9/" class="archive-article-date">
+  	<time datetime="2021-04-14T09:46:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="区别equals、hashCode-和"><a href="#区别equals、hashCode-和" class="headerlink" title="区别equals、hashCode()和=="></a>区别equals、hashCode()和==</h3><p><strong>==说明：</strong></p>
+<p>对于8个基本数据类型，判断的是操作数的值是否相等</p>
+<p>两个类对象==判断，是判断其在栈中所指向的堆中的地址值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String s1&#x3D;&quot;tom&quot;;</span><br><span class="line">String s2&#x3D;&quot;tom&quot;;</span><br><span class="line">System.out.println(s1&#x3D;&#x3D;s2);</span><br><span class="line">&#x2F;&#x2F;返回结果为true</span><br></pre></td></tr></table></figure>
+
+<p>这里第一个s1在JVM的堆的常量池中已经创建了一个叫做”tom”的常量，s1存放的是堆中的地址</p>
+<p>在s2时，因为常量池中已经有了一个”tom”，所以s2也指向该”tom”，s1与s2的指向地址相同</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String s1&#x3D;&quot;tom&quot;;</span><br><span class="line">String s2&#x3D;new String(&quot;tom&quot;);</span><br><span class="line">System.out.println(s1&#x3D;&#x3D;s2);</span><br><span class="line">&#x2F;&#x2F;返回结果为false</span><br></pre></td></tr></table></figure>
+
+<p>这里new之后相当于在堆内存中重新开辟一段新的空间去存储”tom”，因此s1,s2指向的地址不相同</p>
+<p>反过来看equals源码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public boolean equals(Object anObject)&#123;</span><br><span class="line">    if(this&#x3D;&#x3D;anObject)&#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;&#x2F;&#x2F;首先判断s1和s2 &#x3D;&#x3D;来比较地址值是否相同，不相同的话，往下进行</span><br><span class="line">    </span><br><span class="line">    if(anObject instanceof String)&#123;&#x2F;&#x2F;instanceof用来判断传入的值是否为String类型的实例，如果不是直接false</span><br><span class="line">    </span><br><span class="line">        String anotherString &#x3D; (String) anObject;&#x2F;&#x2F;将s2转换为String</span><br><span class="line">        int n&#x3D;this.value.length;&#x2F;&#x2F;获取s1的长度</span><br><span class="line">        if(n &#x3D;&#x3D; anotherString.value.length)&#123;&#x2F;&#x2F;首先判断两者长度是否相同，不同就直接false</span><br><span class="line">        char v1[] &#x3D; value;</span><br><span class="line">        char v2[] &#x3D; anotherString.value;</span><br><span class="line">        &#x2F;&#x2F;拆分字符串为数组[&#39;t&#39;,&#39;o&#39;,&#39;m&#39;]</span><br><span class="line">        int i&#x3D;0;</span><br><span class="line">        while(n-- !&#x3D;0)&#123;</span><br><span class="line">            if(v1[i]!&#x3D;v2[i])</span><br><span class="line">                return false;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        return true;&#x2F;&#x2F;字符串完全相同，返回true</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>equals说明：</strong></p>
+<p>1.equals在Object中比较的还是对象的内存地址，而String方法对equals进行了重写，因此String中比较的就是对象的值；</p>
+<p>2.String类型创建对象首先要看zai在JVM的堆常量池中是否有相同的要创建的值，如果有就赋给当前的引用</p>
+<p><strong>hashCode()说明：</strong></p>
+<p>hashCode()是Object中的native方法，用于获取对象的哈希值，用于确定该对象在哈希表中的索引位置</p>
+<p>也就是将数据的内部存储地址转换成一个整数然后返回</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public native int hashCode();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>hashCode()的存在也决定了数据在哈希表中的存储方式：</p>
+<p>//这里有个图片 ./blog/source/2.jpg</p>
+<p>要放入到哈希表中的元素首先要经历一些判断：</p>
+<p>（1）通过hashCode()来获取hash值，这个值也就是通过哈希函数获取的在数组中的位置值，根据哈希函数的运算规则，这个值有可能相同，不同的话，那就绝对不存在这个对象，可以创建新的空间放入到集合中</p>
+<p>（2）如果hash的值相同，但是也不等说明两个完全一样，要进行equals判断，发现与已经存在的对象equals值也相同的话，就可以舍弃；否则创建该对象</p>
+<p><strong>这就得到了hashCode()和equals的关系：</strong></p>
+<ul>
+<li>如果重写了equals方法，有必要重写hashCode()方法的φ(*￣0￣)这是为啥。。。</li>
+<li>两个对象equals()返回为true，则hashCode()必为true</li>
+</ul>
+<ul>
+<li><p>两个对象equals()返回false，则hashCode()不一定就不同</p>
+</li>
+<li><p>两个对象hashCode()返回相同int，则equals()返回不一定为true</p>
+</li>
+<li><p>两个对象hashCode()返回不同int，则equals()返回必定为false</p>
+</li>
+</ul>
+<h3 id="基本数据类型所占字节大小"><a href="#基本数据类型所占字节大小" class="headerlink" title="基本数据类型所占字节大小"></a>基本数据类型所占字节大小</h3><p>此处有图片./blog/source/3.png</p>
+<p><strong>基本数据类型和对应的包装类的区分</strong></p>
+<p>Integer和int区别:</p>
+<p>Integer是int的包装类，int是Java的基本数据类型</p>
+<p>Integer要实例化才使用，int不用</p>
+<p>Integer默认为null,int为0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer i &#x3D; new Integer(100);</span><br><span class="line">int j &#x3D; 100；</span><br><span class="line">System.out.print(i &#x3D;&#x3D; j); &#x2F;&#x2F;true</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Integer和int相比较的时候，只要值相同结果相等，比较时Java将Integer自动拆包装为int</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer i &#x3D; new Integer(100);</span><br><span class="line">Integer j &#x3D; 100;</span><br><span class="line">System.out.print(i &#x3D;&#x3D; j); &#x2F;&#x2F;false</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当变量值在-128~127，非new生成的Integer对象是常量池的中的，而new生成的是堆中新建的，内存地址不同；</p>
+<p>当不在区间时，非new生成的最终按照new处理，两个地址同样不同</p>
+<p>也解释了下面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Integer i &#x3D; 100;</span><br><span class="line">Integer j &#x3D; 100;</span><br><span class="line">System.out.print(i &#x3D;&#x3D; j); &#x2F;&#x2F;true</span><br><span class="line"></span><br><span class="line">Integer i &#x3D; 128;</span><br><span class="line">Integer j &#x3D; 128;</span><br><span class="line">System.out.print(i &#x3D;&#x3D; j); &#x2F;&#x2F;false</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+<h3 id="Java中this详解"><a href="#Java中this详解" class="headerlink" title="Java中this详解"></a>Java中this详解</h3><p><strong>this指向的是当前对象的引用</strong><br><strong>this.方法名称</strong>——用来访问本类的成员方法</p>
+<h3 id="Java中的块-以及实例化和初始化顺序"><a href="#Java中的块-以及实例化和初始化顺序" class="headerlink" title="Java中的块{}以及实例化和初始化顺序"></a>Java中的块{}以及实例化和初始化顺序</h3><p>1.{}定义在方法中，就是调用方法的时候执行</p>
+<p>2.{}定义在类中，方法外，表示一个构造块；在创建对象的时候，首先找构造器，有构造块，先执行块中内容，再执行构造器中内容</p>
+<p>3.static{}定义在类中，方法外，表示一个静态块；在第一次类加载完毕后执行，并且只执行一次，静态块优先于方法执行</p>
+<p>4.synchronized(){}同步代码块，写在方法中</p>
+<p><strong>执行顺序：静态块(静态变量：按照编写顺序来，并且都只加载一次)→主方法（main）→成员变量、构造块（按照编写顺序来）→构造器代码→静态方法（调用了才加载）</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class Demo &#123;</span><br><span class="line"></span><br><span class="line">    int a &#x3D; print(3);&#x2F;&#x2F;5.加载成员变量，调用print(3)，输出&quot;实例3&quot;</span><br><span class="line">    public Demo() &#123;</span><br><span class="line">        System.out.println(&quot;构造方法&quot;);&#x2F;&#x2F;8.最后执行构造方法</span><br><span class="line">    &#125;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(&quot;非静态块&quot;);&#x2F;&#x2F;6.顺序执行到非静态块，输出&quot;非静态块&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    int b &#x3D; print(4);&#x2F;&#x2F;7.加载成员变量，调用print(4)，输出&quot;实例4&quot;</span><br><span class="line">    public int print(int value) &#123;</span><br><span class="line">        System.out.println(&quot;实例&quot; + value);</span><br><span class="line">        return value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static int i &#x3D; printStatic(1);&#x2F;&#x2F;1.加载静态变量，调用方法printStatic()，输出&quot;静态1&quot;</span><br><span class="line">    static &#123;</span><br><span class="line">        System.out.println(&quot;静态块&quot;);</span><br><span class="line">    &#125;&#x2F;&#x2F;2.按照顺序加载静态块，输出&quot;静态块&quot;</span><br><span class="line">    static int j &#x3D; printStatic(2);&#x2F;&#x2F;3.调用printStatic()，输出&quot;静态块2&quot;</span><br><span class="line">    public static int printStatic(int value) &#123;</span><br><span class="line">        System.out.println(&quot;静态&quot; + value);</span><br><span class="line">        return value;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Demo();&#x2F;&#x2F;4.开始执行主方法，到了类实例化过程</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/14/Java%E7%9F%A5%E8%AF%86%E7%82%B9/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Java集合Collection——List接口02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -176,7 +734,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="List接口-02"><a href="#List接口-02" class="headerlink" title="List接口-02"></a>List接口-02</h2><h3 id="ArrayList子类"><a href="#ArrayList子类" class="headerlink" title="ArrayList子类"></a>ArrayList子类</h3><h4 id="ArrayList子类特点"><a href="#ArrayList子类特点" class="headerlink" title="ArrayList子类特点"></a>ArrayList子类特点</h4><p>1.ArrayList类可以加入任何值，加入null,也可以加入多个null</p>
+        <h3 id="ArrayList子类"><a href="#ArrayList子类" class="headerlink" title="ArrayList子类"></a>ArrayList子类</h3><h4 id="ArrayList子类特点"><a href="#ArrayList子类特点" class="headerlink" title="ArrayList子类特点"></a>ArrayList子类特点</h4><p>1.ArrayList类可以加入任何值，加入null,也可以加入多个null</p>
 <p>2.ArrayList底层由数组来实现的</p>
 <p>3.但是ArrayList线程不安全，可是执行效率高，在多线程情况下不建议使用ArrayList</p>
 <p>add方法源码：</p>
@@ -271,7 +829,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="List接口-01"><a href="#List接口-01" class="headerlink" title="List接口-01"></a>List接口-01</h2><h3 id="List特点"><a href="#List特点" class="headerlink" title="List特点"></a>List特点</h3><p>1.List是Collection接口的子接口</p>
+        <h3 id="List特点"><a href="#List特点" class="headerlink" title="List特点"></a>List特点</h3><p>1.List是Collection接口的子接口</p>
 <p>2.List集合中元素有序，元素可以重复，按照存放的顺序来取出元素</p>
 <p>3.List接口中的每一个元素都有其对应的顺序索引，也就是List的底层为数组</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.get(index);&#x2F;&#x2F;也就是支持get(index)通过索引获取数据index从0开始</span><br></pre></td></tr></table></figure>
@@ -678,81 +1236,10 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/02/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2021/04/02/hello-world/" class="archive-article-date">
-  	<time datetime="2021-04-02T08:17:44.819Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/02/hello-world/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    </nav>
   
 
 
@@ -850,6 +1337,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
@@ -863,6 +1358,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">陈奕迅</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">数据库知识点</a>
               </li>
             
             <div class="clearfix"></div>
