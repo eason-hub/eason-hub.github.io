@@ -156,31 +156,58 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-手撕算法——查找" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-LeetCode手撕——栈" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/02/%E6%89%8B%E6%92%95%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%9F%A5%E6%89%BE/">手撕算法——查找</a>
+      <a class="article-title" href="/2021/04/22/LeetCode%E6%89%8B%E6%92%95%E2%80%94%E2%80%94%E6%A0%88/">LeetCode手撕——栈</a>
     </h1>
   
 
         
-        <a href="/2021/04/02/%E6%89%8B%E6%92%95%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%9F%A5%E6%89%BE/" class="archive-article-date">
-  	<time datetime="2021-04-02T09:16:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-02</time>
+        <a href="/2021/04/22/LeetCode%E6%89%8B%E6%92%95%E2%80%94%E2%80%94%E6%A0%88/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:23:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="顺序查找"><a href="#顺序查找" class="headerlink" title="顺序查找"></a>顺序查找</h2><p>适合存储结构为顺序存储或这链接存储的线性表</p>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>顺序查找从第一个元素开始查找，不论要查找的列表有序无序，将扫描到的值和关键字比较，相等则成功；否则查找失败，则不成功</p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public static int sequenceSearch(int[] array, int k) &#123;</span><br><span class="line">       <span class="keyword">for</span> (int i = 0; i &lt; array.length; i++) &#123;</span><br><span class="line">           <span class="keyword">if</span> (array[i] == k)</span><br><span class="line">               <span class="built_in">return</span> i;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="built_in">return</span> -1;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+        <h3 id="每日温度"><a href="#每日温度" class="headerlink" title="每日温度"></a>每日温度</h3><p><strong>题目</strong></p>
+<p>请根据每日气温列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用0来代替。</p>
+<p>例如，给定一个列表temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是[1, 1, 4, 2, 1, 1, 0, 0]</p>
+<p><strong>初步思路</strong></p>
+<ul>
+<li>暴力遍历：</li>
+</ul>
+<p>针对每天的温度，向后遍历数组，发现超过今天的温度则返回要等待的天数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int[] dailyTemperatures(int[] T) &#123;</span><br><span class="line">         int[] result&#x3D;new int[T.length];</span><br><span class="line">        for(int i&#x3D;0;i&lt;T.length;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            int temp&#x3D;T[i];</span><br><span class="line">            int count&#x3D;0;</span><br><span class="line">            for(int j&#x3D;i+1;j&lt;T.length;j++)</span><br><span class="line">            &#123;</span><br><span class="line">                if(temp&lt;T[j])</span><br><span class="line">                &#123;</span><br><span class="line">                    count&#x3D;j-i;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            result[i]&#x3D;count;</span><br><span class="line">        &#125;</span><br><span class="line">    return result;</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>复杂度：</strong></p>
+<p>执行用时：958 ms, 在所有 Java 提交中击败了19.47%的用户<br>内存消耗：46.8 MB, 在所有 Java 提交中击败了27.84%的用户</p>
+<ul>
+<li>单调栈</li>
+</ul>
+<p>每次从T[i]中读出的数据后，首先判断比较栈中的栈顶元素是否比该温度小，小的话就找到了栈顶元素的第一个更高温度天数，count=i-preIndex；否则就继续压栈，直到再次找到更大的入栈元素或者T[]遍历完成栈内所有元素弹出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public int[] dailyTemperatures(int[] T) &#123;</span><br><span class="line">        Deque&lt;Integer&gt; stack &#x3D; new LinkedList&lt;Integer&gt;();</span><br><span class="line">        int[] result &#x3D; new int[T.length];</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;该栈存储的是编号而不是温度值</span><br><span class="line">        for (int i &#x3D; 0; i &lt; T.length; i++)&#123;</span><br><span class="line">            while(!stack.isEmpty()&amp;&amp;T[i]&gt;T[stack.peek()])&#123;</span><br><span class="line">                int preIndex&#x3D;stack.pop();&#x2F;&#x2F;移除第一个元素</span><br><span class="line">                result[preIndex]&#x3D;i-preIndex;</span><br><span class="line">            &#125;&#x2F;&#x2F;循环为了将小于该温度的都找出来</span><br><span class="line">            stack.push(i);&#x2F;&#x2F;向头部压入元素</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>复杂度</strong></p>
+<p>时间复杂度：O(n)，只针对for一层循环<br>空间复杂度：O(n)，涉及栈空间的开辟</p>
+<p><strong>实现API</strong></p>
+<p>利用了Java API中定义的Deque接口，使用LinkedList类作为具体的实现，这里并没有将Deque作为双向队列使用，而只是作为栈来使用</p>
+<h3 id="字符串解码"><a href="#字符串解码" class="headerlink" title="字符串解码"></a>字符串解码</h3><p><strong>题目</strong></p>
+<p>给定一个经过编码的字符串，返回它解码后的字符串。</p>
+<p>编码规则为: k[encoded_string]，表示其中方括号内部的 encoded_string 正好重复 k 次。注意 k 保证为正整数</p>
+<p><strong>初步思路</strong></p>
+<p>根据提供的栈的思路，想到了数据结构中表达式的求值，也是两个栈来解答，分别用数字栈存放数字，用字符栈来存放字符；<br>遇到”[“正常存入，遇到”]”弹出字符串直到再次遇到”[“,弹出一个数字进行求值，得到的结果再次压入字符栈</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">public String decodeString(String s) &#123;</span><br><span class="line">       Stack&lt;Integer&gt; num&#x3D;new Stack&lt;Integer&gt;();</span><br><span class="line">       Stack&lt;Character&gt; str&#x3D;new Stack&lt;Character&gt;();</span><br><span class="line">       String result&#x3D;&quot;&quot;;</span><br><span class="line">       String mid_result&#x3D;&quot;&quot;;</span><br><span class="line"></span><br><span class="line">       char[] ch&#x3D;s.toCharArray();</span><br><span class="line">       for (char c : ch) &#123;</span><br><span class="line">           if(&#39;0&#39;&lt;&#x3D;c&amp;&amp;c&lt;&#x3D;&#39;9&#39;)&#123;     &#x2F;&#x2F;入数字栈</span><br><span class="line">               num.push((int)c-48);</span><br><span class="line">           &#125;</span><br><span class="line">           else if(c&#x3D;&#x3D;&#39;[&#39;)&#123;</span><br><span class="line">               str.push(c);</span><br><span class="line">           &#125;</span><br><span class="line">           else if(c&#x3D;&#x3D;&#39;]&#39;)&#123;</span><br><span class="line">               String mid&#x3D;&quot;&quot;;</span><br><span class="line">               while(str.peek()!&#x3D;&#39;[&#39;)&#123;</span><br><span class="line">                   mid+&#x3D;str.pop();</span><br><span class="line">               &#125;</span><br><span class="line">               str.pop();      &#x2F;&#x2F;将[出栈</span><br><span class="line">               &#x2F;&#x2F;字符串反转,并再次入栈</span><br><span class="line">               char[] midch&#x3D;mid.toCharArray();</span><br><span class="line">               int i&#x3D;num.pop();</span><br><span class="line">               while(i!&#x3D;0)&#123;</span><br><span class="line">                   for(int j&#x3D;midch.length-1;j&gt;&#x3D;0;j--)</span><br><span class="line">                   &#123;</span><br><span class="line">                       str.push(midch[j]);</span><br><span class="line">                   &#125;</span><br><span class="line">                   i--;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           else&#123;</span><br><span class="line">               str.push(c);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       String stt&#x3D;&quot;&quot;;</span><br><span class="line">       while(!str.empty())&#123;</span><br><span class="line">           stt+&#x3D;str.pop();</span><br><span class="line">       &#125;</span><br><span class="line">       &#x2F;&#x2F;再次反转得到结果</span><br><span class="line">       char[] res&#x3D;new char[stt.length()];</span><br><span class="line">       res&#x3D;stt.toCharArray();</span><br><span class="line">       for(int j&#x3D;stt.length()-1;j&gt;&#x3D;0;j--)&#123;</span><br><span class="line">           result+&#x3D;res[j];</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       return result;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
+<p><strong>存在的问题</strong></p>
+<p>这里面只是考虑到数字为个位数的情况，但是当为超过个位数时，弹出的数值就不正确了，接下来继续优化；</p>
 
       
 
@@ -194,11 +221,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">查找</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">LeetCode</a>
         		</li>
       		
 		</ul>
@@ -210,7 +233,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        			<a href="/categories/算法//" class="article-tag-list-link color3">算法</a>
         		</li>
       		
 		</ul>
@@ -219,7 +242,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/02/%E6%89%8B%E6%92%95%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%9F%A5%E6%89%BE/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/04/22/LeetCode%E6%89%8B%E6%92%95%E2%80%94%E2%80%94%E6%A0%88/">展开全文 >></a>
         </p>
       
 
@@ -249,40 +272,856 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Java集合——Deque" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/02/hello-world/">Hello World</a>
+      <a class="article-title" href="/2021/04/22/Java%E9%9B%86%E5%90%88%E2%80%94%E2%80%94Deque/">Java集合——Deque</a>
     </h1>
   
 
         
-        <a href="/2021/04/02/hello-world/" class="archive-article-date">
-  	<time datetime="2021-04-02T08:17:44.819Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-02</time>
+        <a href="/2021/04/22/Java%E9%9B%86%E5%90%88%E2%80%94%E2%80%94Deque/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:22:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+        <h3 id="Deque接口"><a href="#Deque接口" class="headerlink" title="Deque接口"></a>Deque接口</h3><p>Deque表示的是<strong>双向队列</strong>，就是可以从队列的两端增加或者删除元素</p>
+<p>Deque为接口，那么初始化的时候就要用到具体的实现，在Collections API中包含两种实现方式：</p>
+<p>**- java.util.LinkedList</p>
+<ul>
+<li>java.util.ArrayDeque**</li>
+</ul>
+<h3 id="LinkedList实现Deque"><a href="#LinkedList实现Deque" class="headerlink" title="LinkedList实现Deque"></a>LinkedList实现Deque</h3><ul>
+<li>创建Deque</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Deque deque &#x3D; new LinkedList();&#x2F;&#x2F;创建Deque对象</span><br><span class="line"></span><br><span class="line">Deque&lt;Object&gt; deque &#x3D; new LinkedList&lt;Object&gt;();&#x2F;&#x2F;Deque泛型，并且必须是Object类型，不可以是八大基本数据类型</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<ul>
+<li>向Deque中添加元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">deque.add();&#x2F;&#x2F;向Deque尾部添加元素，不能添加返回error，而不是false</span><br><span class="line"></span><br><span class="line">deque.addLast();&#x2F;&#x2F;同上</span><br><span class="line"></span><br><span class="line">deque.addFirst();&#x2F;&#x2F;在Deque的头部添加元素</span><br><span class="line"></span><br><span class="line">deque.offer();&#x2F;&#x2F;在Deque尾部添加元素，成功返回true，失败返回false，而不报错</span><br><span class="line"></span><br><span class="line">deque.offerFirst();&#x2F;&#x2F;在Deque头部添加元素</span><br><span class="line"></span><br><span class="line">deque.push();&#x2F;&#x2F;在Deque头部添加元素，失败返回异常</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看Deque中元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">deque.peek();&#x2F;&#x2F;返回第一个元素，为空则返回null</span><br><span class="line"></span><br><span class="line">deque.peekFirst();&#x2F;&#x2F;同上</span><br><span class="line"></span><br><span class="line">deque.peekLast();&#x2F;&#x2F;返回最后一个元素的值</span><br><span class="line"></span><br><span class="line">deque.getFirst();</span><br><span class="line"></span><br><span class="line">deque.getLast();</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<ul>
+<li>移除Deque中元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">deque.remove();&#x2F;&#x2F;移除第一个元素并返回该元素的值，但是如果为空则抛出异常而不是null</span><br><span class="line"></span><br><span class="line">deque.removeFirst();&#x2F;&#x2F;同上</span><br><span class="line"></span><br><span class="line">deque.removeLast();&#x2F;&#x2F;移除最后一个元素，抛出异常</span><br><span class="line"></span><br><span class="line">deque.poll();&#x2F;&#x2F;移除第一个元素，为空则返回null，而不是抛出异常</span><br><span class="line"></span><br><span class="line">deque.pollFirst();</span><br><span class="line"></span><br><span class="line">deque.pollLast();</span><br><span class="line"></span><br><span class="line">deque.pop();&#x2F;&#x2F;移除第一个元素，为空则抛出异常</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<ul>
+<li>检查Deque包含某个元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deque.contains();&#x2F;&#x2F;返回true或false</span><br></pre></td></tr></table></figure>
 
+<ul>
+<li><p>获取Deque的大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deque.size();&#x2F;&#x2F;获取deque中元素个数</span><br></pre></td></tr></table></figure></li>
+<li><p>Deque中的元素遍历获取</p>
+</li>
+</ul>
+<p>遵循集合中的常见方法，iterator()或for的增强循环</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/Java%E9%9B%86%E5%90%88%E2%80%94%E2%80%94Deque/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Map接口-01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-01/">Map接口-01</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-01/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:20:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Map接口介绍"><a href="#Map接口介绍" class="headerlink" title="Map接口介绍"></a>Map接口介绍</h3><p>Map存放的是K-V的键值对</p>
+<ul>
+<li><p>Map和Collectinon并列存在，以键值对形式保存</p>
+</li>
+<li><p>Map存放和取出的顺序不一致</p>
+</li>
+<li><p>Map中key和value可以为任意引用类型，会封装到HashMap$Node对象（实现了Entry接口）中，这个Node对象包含了四个属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">final int hash;</span><br><span class="line">final K key;</span><br><span class="line">V value;</span><br><span class="line">Node&lt;K,V&gt; next;</span><br></pre></td></tr></table></figure></li>
+<li><p>当Key发生重复后，用新的Key值对应的Value<strong>替换</strong>了之前的Value值</p>
+</li>
+<li><p>但是Map中的Value值可以重复</p>
+</li>
+<li><p>Key和Value都可以为null，但是Key只能由一个为null，Value可以有多个为null</p>
+</li>
+<li><p><strong>通常</strong>String来作为Key的值</p>
+</li>
+<li><p>Key和Value必须是一对一的关系，通过Key找到Value值  </p>
+</li>
+<li><p>EntrySet这里没搞懂( •̀ ω •́ )✧</p>
+</li>
+<li><p>HashMap不支持线程同步</p>
+</li>
+</ul>
+<h3 id="Map接口常用方法"><a href="#Map接口常用方法" class="headerlink" title="Map接口常用方法"></a>Map接口常用方法</h3><ul>
+<li><p>添加元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">V put(K key,V value)</span><br></pre></td></tr></table></figure></li>
+<li><p>根据Key值删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">V remove(Object key)</span><br></pre></td></tr></table></figure></li>
+<li><p>根据Key值获取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">V get(Object key)</span><br></pre></td></tr></table></figure></li>
+<li><p>获取数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int size()</span><br></pre></td></tr></table></figure></li>
+<li><p>判断是否为空</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">boolean isEmpty()</span><br></pre></td></tr></table></figure></li>
+<li><p>清空</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void clear()</span><br></pre></td></tr></table></figure></li>
+<li><p>看是否包含key和value</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">boolean containsKey(Object key)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">boolean containsValue(Object value)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Map接口遍历"><a href="#Map接口遍历" class="headerlink" title="Map接口遍历"></a>Map接口遍历</h3><h3 id="HashMap扩容机制"><a href="#HashMap扩容机制" class="headerlink" title="HashMap扩容机制"></a>HashMap扩容机制</h3><ul>
+<li><p>HashMap在jdk7中底层为数组+链表的形式，而在JDK8中变成了数组+链表+红黑树，每一个&lt;K，V&gt;键值对都是以HashMap$Node来存储，而这里Node是实现了Map接口中的Entry接口（从没想过接口里还有接口）</p>
+</li>
+<li><p><strong>当数组大小为64并且单个链表节点数达到8时，链表树化</strong></p>
+</li>
+<li><p>HashSet的扩容同HashMap相同</p>
+</li>
+<li><p>构造器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public HashMap()&#123;</span><br><span class="line">    this.loadFactor &#x3D; DEFAULT_LOAD_FACTOR;&#x2F;&#x2F;执行构造器初始化了一个加载因子，值为0.75</span><br><span class="line">&#x2F;&#x2F;HashMap$Node[] table &#x3D; null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>put方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.首先使用valueOf(Object obj)将所有传入的Object类型转换成String类型</span><br><span class="line"></span><br><span class="line">public V put(K key, V value)&#123;</span><br><span class="line">    return putVal(hash(key), key, value, true);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>putVal()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">final V putVal(int hash, K key, V value, boolean onlyIfAbsent,boolean evict) &#123;</span><br><span class="line">        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;</span><br><span class="line">        if ((tab &#x3D; table) &#x3D;&#x3D; null || (n &#x3D; tab.length) &#x3D;&#x3D; 0)</span><br><span class="line">            n &#x3D; (tab &#x3D; resize()).length;</span><br><span class="line">            &#x2F;&#x2F;resize()用于new()16个初始空间</span><br><span class="line">        if ((p &#x3D; tab[i &#x3D; (n - 1) &amp; hash]) &#x3D;&#x3D; null)</span><br><span class="line">            tab[i] &#x3D; newNode(hash, key, value, null);</span><br><span class="line">        else &#123;</span><br><span class="line">            Node&lt;K,V&gt; e; K k;</span><br><span class="line">            if (p.hash &#x3D;&#x3D; hash &amp;&amp;</span><br><span class="line">                ((k &#x3D; p.key) &#x3D;&#x3D; key || (key !&#x3D; null &amp;&amp; key.equals(k))))</span><br><span class="line">                e &#x3D; p;</span><br><span class="line">            else if (p instanceof TreeNode)</span><br><span class="line">                e &#x3D; ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);</span><br><span class="line">            else &#123;</span><br><span class="line">                for (int binCount &#x3D; 0; ; ++binCount) &#123;</span><br><span class="line">                    if ((e &#x3D; p.next) &#x3D;&#x3D; null) &#123;</span><br><span class="line">                        p.next &#x3D; newNode(hash, key, value, null);</span><br><span class="line">                        if (binCount &gt;&#x3D; TREEIFY_THRESHOLD - 1) &#x2F;&#x2F; -1 for 1st</span><br><span class="line">                            treeifyBin(tab, hash);</span><br><span class="line">                        break;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (e.hash &#x3D;&#x3D; hash &amp;&amp;</span><br><span class="line">                        ((k &#x3D; e.key) &#x3D;&#x3D; key || (key !&#x3D; null &amp;&amp; key.equals(k))))</span><br><span class="line">                        break;</span><br><span class="line">                    p &#x3D; e;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if (e !&#x3D; null) &#123; &#x2F;&#x2F; existing mapping for key</span><br><span class="line">                V oldValue &#x3D; e.value;</span><br><span class="line">                if (!onlyIfAbsent || oldValue &#x3D;&#x3D; null)</span><br><span class="line">                    e.value &#x3D; value;</span><br><span class="line">                afterNodeAccess(e);</span><br><span class="line">                return oldValue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        ++modCount;</span><br><span class="line">        if (++size &gt; threshold)</span><br><span class="line">            resize();</span><br><span class="line">        afterNodeInsertion(evict);</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>初始为16个数组空间，初始临界值threshold=12，当Key对应数组位置null时，放入；</p>
+<p>再次添加后，进行Key值的比较（equals(Key)），不相同则新增链表节点，否则替换</p>
+<p><strong>HashMap底层为什么要用红黑树而不用AVL(二叉查找树)？</strong><br>红黑树也是AVL的一种，都是很高效的查找算法，但是不同的地方在于不限制每个树的节点只有两个分支，AVL弊端就是当节点过多，使得树越来越高，查找效率越来越低</p>
+<p><strong>HashMap缺点</strong></p>
+<ul>
+<li>HashMap高度依赖于hash()函数，要是Key是自定义类，就要重写hashcode方法</li>
+<li>存入时hashcode()就确定了，比如说key是名字，但是后续名字的改变，还存在这个位置就不正确了</li>
+<li>HashMap线程不安全，多个线程进行处理时，容易发生错误</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Java Collections</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-01/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Map接口-02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-02/">Map接口-02</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-02/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:19:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="实现类Hashtable介绍"><a href="#实现类Hashtable介绍" class="headerlink" title="实现类Hashtable介绍"></a>实现类Hashtable介绍</h3><ul>
+<li>Hashtable类实现了Map接口，继承了Dictionary类</li>
+<li>Hashtable支持线程同步</li>
+<li>其Key和Value值都不可以为空，否则抛出NullPointerException异常</li>
+<li>对于Key值相同的键值对，后者会对前者进行替换（这也是所有Map键值对的特点）</li>
+</ul>
+<h3 id="Hashtable底层"><a href="#Hashtable底层" class="headerlink" title="Hashtable底层"></a>Hashtable底层</h3><ul>
+<li>底层为Hashtable$Entry的数组，<strong>初始化大小为11</strong>（这里的Entry为Hashtable中的静态内部类，继承自Map.Entry接口）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">threshold&#x3D;8&#x3D;11*loadFactor&#x3D;11*0.75</span><br><span class="line">&#x2F;&#x2F;临界值，也就是当再次需要扩容时为8个</span><br></pre></td></tr></table></figure></li>
+<li>Hashtable扩容机制：<br>最开始为11个空间，每次添加的键值对达到threshold后，根据threshold*loadFactor获取到下一次扩容时的扩容数量，这两个值可以在Debug下看到</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Java Collections</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-02/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Map接口-03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-03/">Map接口-03</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-03/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:17:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="TreeMap源码分析"><a href="#TreeMap源码分析" class="headerlink" title="TreeMap源码分析"></a>TreeMap源码分析</h3><ul>
+<li>TreeSet的底层就是TreeMap，当作为TreeSet实现时&lt;K,V&gt;中，V值为PRESENT的静态对象</li>
+<li>没有为comparator对象赋值的话，put方法就按照默认的String类中的compareTo()方法来比较Key值的String大小进行排序添加</li>
+<li>可以利用内部类中重写CompareTo()方法设置TreeMap中键值对的存储排序顺序</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">TreeMap treeMap &#x3D; new TreeMap(new Comparator() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public int compare(Object o1, Object o2) &#123;</span><br><span class="line">                return ((String) o2).compareTo((String) o1) ;&#x2F;&#x2F;按照Key的大小进行排序大→小</span><br><span class="line">                return ((String)o2).length()-((String)o1).length();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        treeMap.put(&quot;lingi&quot;,&quot;凌淇鑫&quot;);</span><br><span class="line">        treeMap.put(&quot;wang&quot;,&quot;王祖贤&quot;);</span><br><span class="line">        treeMap.put(&quot;Brader&quot;,&quot;Brad Pitt&quot;);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;treeMap&#x3D;&quot;+treeMap);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public TreeMap(Comparator&lt;? super K&gt; comparator)&#123;</span><br><span class="line">    this.comparator&#x3D;comparator;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;构造器：把传入的实现了Comparator接口的匿名内部类对象传递给TreeMap的comparator属性</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用put方法时，第一次为Null时添加直接创建Entry对象作为root，第二次之后 启动comparator比较器，用返回值与0比较决定放在tree的left还是right,这里的Key是否相等由程序员决定，而不是像HashMap由equals和HashCode决定</li>
+</ul>
+<p><strong>但是上面代码中的例子，比如按照字符串的长度进行排序时，当出现相同长度时，就不会进行put操作</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> TreeMap treeMap &#x3D; new TreeMap(new Comparator() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public int compare(Object o1, Object o2) &#123;</span><br><span class="line">                &#x2F;&#x2F;return ((String) o2).compareTo((String) o1) ;&#x2F;&#x2F;按照Key的大小进行排序大→小</span><br><span class="line">                return ((String)o2).length()-((String)o1).length();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        treeMap.put(&quot;ling&quot;,&quot;凌淇鑫&quot;);</span><br><span class="line">        treeMap.put(&quot;wang&quot;,&quot;王祖贤&quot;);</span><br><span class="line">        treeMap.put(&quot;Brad&quot;,&quot;Brad Pitt&quot;);</span><br><span class="line">        </span><br><span class="line">&#x2F;&#x2F;这里三个Key的长度都相同，第一个ling作为Key存入后，与之匹配的Value的值&quot;凌淇鑫&quot;存入，但是后续的key值因为重复不会存入，但是值会发生替换</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;最终导致只存放&#123;ling&#x3D;Brad Pitt&#125;一个键值对 </span><br></pre></td></tr></table></figure>
+
+<p><strong>put的源码如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">if (cpr !&#x3D; null) &#123;</span><br><span class="line">           do &#123;</span><br><span class="line">               parent &#x3D; t;</span><br><span class="line">               cmp &#x3D; cpr.compare(key, t.key);</span><br><span class="line">               if (cmp &lt; 0)</span><br><span class="line">                   t &#x3D; t.left;</span><br><span class="line">               else if (cmp &gt; 0)</span><br><span class="line">                   t &#x3D; t.right;</span><br><span class="line">               else</span><br><span class="line">                   return t.setValue(value);&#x2F;&#x2F;这也解释了为什么要替换值但是Key不保留</span><br><span class="line">           &#125; while (t !&#x3D; null);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-03/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Map接口-04" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-04/">Map接口-04</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-04/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:15:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="LinkedHashMap特点"><a href="#LinkedHashMap特点" class="headerlink" title="LinkedHashMap特点"></a>LinkedHashMap特点</h3><ul>
+<li>LinkedHashMap继承自HashMap，实现了Map接口，不同的LinkedHashMap在底层维护了一个双向链表</li>
+<li>LinkedHashMap(int ,float, boolean)这个构造器中，为true时设置为访问的顺序存储，否则默认以put的顺序存储</li>
+</ul>
+<h3 id="集合类的选择规范"><a href="#集合类的选择规范" class="headerlink" title="集合类的选择规范"></a>集合类的选择规范</h3><ul>
+<li>首先判断对象类型为<br>单例：Collection接口中List、Set<br>&emsp;允许重复：List<br>&emsp;&emsp;增删多：LinkedList(链表)<br>&emsp;&emsp;改查多：ArrayList(数组)<br>&emsp;不允许重复：Set<br>&emsp;&emsp;无序：HashSet(HashMap)<br>&emsp;&emsp;排序：TreeSet<br>&emsp;&emsp;插入和取出的顺序一致：LinkedHashSet<br>&emsp;<br>键值对：Map接口<br>&emsp;无序：HashMap<br>&emsp;排序：TreeMap<br>&emsp;插入和取出的顺序一致：LinkedHashMap<br>&emsp;能够读取文件：Properties</li>
+</ul>
+<h3 id="Map接口类汇总"><a href="#Map接口类汇总" class="headerlink" title="Map接口类汇总"></a>Map接口类汇总</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">底层结构</th>
+<th align="center">是否线程同步</th>
+<th align="center">扩容机制</th>
+<th align="center">存储特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">HashMap</td>
+<td align="center">数组+链表+红黑树</td>
+<td align="center">否</td>
+<td align="center">当数组达到64，链表数达到8就会发生树化</td>
+<td align="center">Key只有一个为Null，Value可以多个为null，遍历时获取数据随机</td>
+</tr>
+<tr>
+<td align="center">Hashtable</td>
+<td align="center">Entry类型数组(Hash值存储)</td>
+<td align="center">是</td>
+<td align="center">初始值11个Entry数组，达到极限值就按照极限值*加载因子进行再次扩容</td>
+<td align="center">不允许存储null，遍历获取数随机</td>
+</tr>
+<tr>
+<td align="center">TreeMap</td>
+<td align="center">红黑树</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="center">像Comparator参数传值按照特定顺序存储，null可以存一个，默认按照字符串升序存储</td>
+</tr>
+<tr>
+<td align="center">LinkedHashMap</td>
+<td align="center">数组+双向链表+红黑树</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="center">输出和输入的顺序相同</td>
+</tr>
+</tbody></table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-04/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java线程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/Java%E7%BA%BF%E7%A8%8B/">Java线程</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/Java%E7%BA%BF%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:14:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="线程、进程和协程"><a href="#线程、进程和协程" class="headerlink" title="线程、进程和协程"></a>线程、进程和协程</h3><p><strong>进程————打开百度网盘</strong><br>就是应用程序的启动实例，就是运行中的程序，比如说打开了软件，打开一个游戏就是开启了一个进程，进程能够拥有代码和打开的文件资源、数据资源、独立的内存空间<br>进程就包含自身的产生、存在和消亡的过程</p>
+<p><strong>线程————启动一个下载任务</strong><br>属于进程，线程是进程创建的，线程是进程的一部分，并且拥有自己独立的栈空间；<br>线程是最小执行单元，进程是最小的资源管理单元<br><strong>通常所说的五大状态都是线程所拥有的：初始化，就绪，运行，阻塞，销毁</strong></p>
+<p><strong>线程和进程的区别</strong></p>
+<ul>
+<li>两者最主要的区别就是操作系统对其不同的资源管理方式</li>
+<li>一段程序启动后自动创建了一个进程，进程拥有独立的地址空间</li>
+<li>线程可以算作是进程的一部分，线程拥有自己的堆栈空间，多个线程共享内存</li>
+<li>进程之间的切换对资源消耗大，而线程之间的切换效率较高，对于要求的并发量大的操作，只能用线程</li>
+</ul>
+<p>JVM通过调用os内核中的TCB（线程控制模块）来改变线程的状态，过程耗费CPU资源；<br>并且根据生产者消费者算法（全部生产者线程组成进程），要设置同步锁和线程之间状态的转换，这就很耗费性能；</p>
+<p><strong>协程就是轻量级线程</strong><br>线程可以有多个协程，比如在主线程中生产数据，在协程中消费数据，<strong>协程暂停完全可以由程序控制，而不需要操作系统内核来切换，开销很小</strong></p>
+<p><strong>协程就是减少了线程的切换，速度更快</strong><br>例如python中的yield关键字，是程序强制等待而不是操作系统决定的，这样在内部的分配就不用了上锁和互斥的添加</p>
+<h3 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h3><p>并发：同一时刻，多个任务交替进行，单核CPU实现多任务</p>
+<p>并行：同一时刻，多个任务同时执行，多核CPU可以实现并行</p>
+<p>并发和并行同时存在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Runtime runtime &#x3D; Runtime.getRuntime();</span><br><span class="line">int cpuNums&#x3D;runtime.availableProcessors();</span><br><span class="line">&#x2F;&#x2F;获取此电脑CPU数量</span><br></pre></td></tr></table></figure>
+<h3 id="进程调度算法"><a href="#进程调度算法" class="headerlink" title="进程调度算法"></a>进程调度算法</h3><ul>
+<li>先来先服务调度算法</li>
+<li>短作业优先调度算法<br>不能保证紧迫性进程及时处理</li>
+<li>优先级调度算法<br>非抢占式：分配给cpu后，就完全按照优先级调度<br>抢占式：执行期间如果出现了另一个更高优先级的进程，进程调度立即停止</li>
+<li>高响应比优先调度算法<br>R=（等待时间+要求服务时间）/要求服务时间<br>好处在于，当等待时间相同时，要求服务时间越小，R越大，有利于短作业优先<br>当要求服务时间相同时，等待时间越大，R越大，有利于先来的先处理</li>
+<li>时间片轮转调度算法<br>用完了规定的时间片，但是任务未完成，自行释放占有的CPU，到就绪队列等待</li>
+<li>多级反馈队列</li>
+</ul>
+<h3 id="进程间通信方式"><a href="#进程间通信方式" class="headerlink" title="进程间通信方式"></a>进程间通信方式</h3><h3 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h3><p><strong>因为Thread类实现了Runnable接口</strong></p>
+<ul>
+<li>继承Thread类，重写run方法</li>
+<li>实现Runnable接口，重写run方法</li>
+</ul>
+<p>针对程序来说：main线程作为主线程和子线程Thread-0、Thread-1…交替进行</p>
+<p><strong>因此不一定是主方法main线程结束整个程序就会结束</strong></p>
+<p><em>利用JConsole（Terminal终端界面输入命令）监控线程的执行</em></p>
+<ul>
+<li>因为Java是单继承的，当该类已经继承了父类，这时只能通过实现接口来完成线程创建</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Dog dog &#x3D; new Dog();&#x2F;&#x2F;创建的对象可以当作线程使用</span><br><span class="line">        &#x2F;&#x2F;dog.start();</span><br><span class="line">        Thread thread&#x3D;new Thread(dog);&#x2F;&#x2F; 表示线程启动</span><br><span class="line">        thread.start();</span><br><span class="line">        </span><br><span class="line">class Dog implements Runnable&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for(int i&#x3D;0;i&lt;5;i++)&#123;</span><br><span class="line">            System.out.println(&quot;汪汪&quot;);</span><br><span class="line">            try &#123;&#x2F;&#x2F;alt+ctrl+t获取快捷创建try&#x2F;catch块</span><br><span class="line">                Thread.sleep(1000);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br></pre></td></tr></table></figure>
+
+<p>继承Runnable接口的线程，要通过创建Thread类将该线程对象放入Thread中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Dog dog &#x3D; new Dog();&#x2F;&#x2F;创建的对象可以当作线程使用</span><br><span class="line">        &#x2F;&#x2F;dog.start();</span><br><span class="line">        Thread thread&#x3D;new Thread(dog);&#x2F;&#x2F; 表示线程启动</span><br><span class="line">        thread.start();</span><br></pre></td></tr></table></figure>
+<p><strong>这里用到了代理模式</strong></p>
+<h3 id="线程执行"><a href="#线程执行" class="headerlink" title="线程执行"></a>线程执行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Dog dog &#x3D; new Dog();&#x2F;&#x2F;创建的对象可以当作线程使用</span><br><span class="line">dog.start();&#x2F;&#x2F;表示线程启动</span><br><span class="line">        </span><br><span class="line">class Dog extends Thread&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for(int i&#x3D;0;i&lt;1000;i++)&#123;</span><br><span class="line">            System.out.println(&quot;汪汪&quot;);</span><br><span class="line">            try &#123;&#x2F;&#x2F;alt+ctrl+t获取快捷创建try&#x2F;catch块</span><br><span class="line">                Thread.sleep(10000);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么要通过start()方法来调用线程中的run()方法呢？</strong></p>
+<p>因为run()就是普通的方法，如果直接调用run()那么子线程中未结束的话，作为主线程中的调用一部分，主线程绝对不会结束，只能是串行化执行</p>
+<h3 id="start-方法源码解读"><a href="#start-方法源码解读" class="headerlink" title="start()方法源码解读"></a>start()方法源码解读</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public synchronized void start() &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>start0()方法是native方法，也就是start0()是真正实现多线程的方法，所以启动多线程不是run()</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private native void start0();&#x2F;&#x2F;通过JVM调用C C++</span><br></pre></td></tr></table></figure>
+<p>start()调用start0()方法后，该线程不会立刻执行而是变成了可与行状态，具体什么时候执行，由CPU调度</p>
+<p>start0()的具体执行和os有关</p>
+<h3 id="Synchronized关键字"><a href="#Synchronized关键字" class="headerlink" title="Synchronized关键字"></a>Synchronized关键字</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/Java%E7%BA%BF%E7%A8%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-SpringMVC探究-01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/SpringMVC%E6%8E%A2%E7%A9%B6-01/">SpringMVC探究-01</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/SpringMVC%E6%8E%A2%E7%A9%B6-01/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="理解SpringMVC"><a href="#理解SpringMVC" class="headerlink" title="理解SpringMVC"></a>理解SpringMVC</h3><p>SpringMVC就是基于Java实现的MVC模式的轻量级Web框架，这里将Module模型、View视图、Controller控制器分离，解耦合并且通过统一的DispatcherSerblet来管理，并且保留了Spring中面向切面编程和控制反转的优点</p>
+<h3 id="SpringMVC的工作原理"><a href="#SpringMVC的工作原理" class="headerlink" title="SpringMVC的工作原理"></a>SpringMVC的工作原理</h3><ul>
+<li>SpringMVC的工作核心都是由DispatcherServlet完成的，客户端的所有请求都会交给DispatcherServlet来处理，并且由DispatcherServlet来调用其他模块</li>
+<li>DispatcherServlet接收到了用户的请求后，根据发送过来的URL地址，交给HandlerMapping来获取相应的Handler处理器，并返回给DispatcherServlet</li>
+<li>DispatcherServlet将接收到的Handler交给HandlerAdapter处理器适配器，适配器调用具体的Handler方法返回一个ModelandView对象，ModelandView包含了数据以及对应的视图信息</li>
+<li>将ModelandView返回给DispatcherServlet后，还要借助ViewResolver(视图解析器)进行逻辑视图到真实视图的解析工作</li>
+<li>返回真正的View对象发送给客户端</li>
+</ul>
+<h3 id="web-xml配置"><a href="#web-xml配置" class="headerlink" title="web.xml配置"></a>web.xml配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet&gt;</span><br><span class="line">        &lt;servlet-name&gt;SpringMVC&lt;&#x2F;servlet-name&gt;</span><br><span class="line">        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet</span><br><span class="line">        &lt;&#x2F;servlet-class&gt;</span><br><span class="line">        &lt;!-- 当applicationContext.xml放在src 下时要特别声明一下，如果不声明，则默认视图配置文件的命名方式为 SpringMVC-servlet.xml--&gt;</span><br><span class="line">        &lt;init-param&gt;&#x2F;&#x2F;用于DispatcherServlet绑定SpringMVC的配置文件</span><br><span class="line">        &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">        &lt;param-value&gt;classpath:applicationContext.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">        &lt;&#x2F;init-param&gt;</span><br><span class="line">        &lt;load-on-startup&gt;1&lt;&#x2F;load-on-startup&gt;</span><br><span class="line">        </span><br><span class="line">    &lt;&#x2F;servlet&gt;</span><br><span class="line"></span><br><span class="line">    &lt;servlet-mapping&gt;</span><br><span class="line">        &lt;servlet-name&gt;SpringMVC&lt;&#x2F;servlet-name&gt;</span><br><span class="line">        &lt;url-pattern&gt;*.do&lt;&#x2F;url-pattern&gt;</span><br><span class="line">    &lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><url-pattern>标签中由多种写法：<br>&nbsp;&nbsp;&nbsp;/ 只匹配所有的请求，不会匹配jsp界面<br>&nbsp;&nbsp;&nbsp;/* 匹配所有的请求，包括JSP，这样.jsp后缀无限嵌套</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java-EE//" class="article-tag-list-link color3">Java EE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/SpringMVC%E6%8E%A2%E7%A9%B6-01/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-自动化测试简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%AE%80%E4%BB%8B/">自动化测试简介</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%AE%80%E4%BB%8B/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:12:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
       
 
       
@@ -294,7 +1133,69 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/02/hello-world/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/04/22/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%AE%80%E4%BB%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Linux常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Linux常用命令</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:12:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
         </p>
       
 
@@ -326,7 +1227,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -421,11 +1322,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+                <a href="javascript:void(0)" class="js-tag color3">线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -433,11 +1338,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">粤语歌</a>
+                <a href="javascript:void(0)" class="js-tag color4">LeetCode</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">陈奕迅</a>
+                <a href="javascript:void(0)" class="js-tag color2">Java Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Spring</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -450,6 +1359,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">数据库知识点</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">笔试习题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">粤语歌</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">陈奕迅</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">计算机基本知识</a>
               </li>
              
               <li class="article-tag-list-item">

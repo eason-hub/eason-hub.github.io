@@ -16,7 +16,7 @@
 <meta property="og:description" content="区别equals、hashCode()和&#x3D;&#x3D;&#x3D;&#x3D;说明： 对于8个基本数据类型，判断的是操作数的值是否相等 两个类对象&#x3D;&#x3D;判断，是判断其在栈中所指向的堆中的地址值 1234String s1&#x3D;&quot;tom&quot;;String s2&#x3D;&quot;tom&quot;;System.out.println(s1&#x3D;&#x3D;s2);&#x2F;&#x2F;返回结果">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-04-14T09:46:10.000Z">
-<meta property="article:modified_time" content="2021-04-14T09:47:26.825Z">
+<meta property="article:modified_time" content="2021-04-22T14:45:28.652Z">
 <meta property="article:author" content="lqx">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -189,16 +189,23 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String s1&#x3D;&quot;tom&quot;;</span><br><span class="line">String s2&#x3D;new String(&quot;tom&quot;);</span><br><span class="line">System.out.println(s1&#x3D;&#x3D;s2);</span><br><span class="line">&#x2F;&#x2F;返回结果为false</span><br></pre></td></tr></table></figure>
 
 <p>这里new之后相当于在堆内存中重新开辟一段新的空间去存储”tom”，因此s1,s2指向的地址不相同</p>
+<p><strong>equals()说明</strong></p>
+<p>Object类中的equals源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public boolean equals(Object obj) </span><br><span class="line">&#123;</span><br><span class="line">    return (this &#x3D;&#x3D; obj);     </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以Objct中的equals方法和”==”并没有不同，都是比较的地址是否相等</p>
+<p>这也是为什么euqals()要重写的原因</p>
 <p>反过来看equals源码:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public boolean equals(Object anObject)&#123;</span><br><span class="line">    if(this&#x3D;&#x3D;anObject)&#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;&#x2F;&#x2F;首先判断s1和s2 &#x3D;&#x3D;来比较地址值是否相同，不相同的话，往下进行</span><br><span class="line">    </span><br><span class="line">    if(anObject instanceof String)&#123;&#x2F;&#x2F;instanceof用来判断传入的值是否为String类型的实例，如果不是直接false</span><br><span class="line">    </span><br><span class="line">        String anotherString &#x3D; (String) anObject;&#x2F;&#x2F;将s2转换为String</span><br><span class="line">        int n&#x3D;this.value.length;&#x2F;&#x2F;获取s1的长度</span><br><span class="line">        if(n &#x3D;&#x3D; anotherString.value.length)&#123;&#x2F;&#x2F;首先判断两者长度是否相同，不同就直接false</span><br><span class="line">        char v1[] &#x3D; value;</span><br><span class="line">        char v2[] &#x3D; anotherString.value;</span><br><span class="line">        &#x2F;&#x2F;拆分字符串为数组[&#39;t&#39;,&#39;o&#39;,&#39;m&#39;]</span><br><span class="line">        int i&#x3D;0;</span><br><span class="line">        while(n-- !&#x3D;0)&#123;</span><br><span class="line">            if(v1[i]!&#x3D;v2[i])</span><br><span class="line">                return false;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        return true;&#x2F;&#x2F;字符串完全相同，返回true</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 <p><strong>equals说明：</strong></p>
 <p>1.equals在Object中比较的还是对象的内存地址，而String方法对equals进行了重写，因此String中比较的就是对象的值；</p>
-<p>2.String类型创建对象首先要看zai在JVM的堆常量池中是否有相同的要创建的值，如果有就赋给当前的引用</p>
+<p>2.String类型创建对象首先要看在JVM的堆常量池中是否有相同的要创建的值，如果有就赋给当前的引用</p>
 <p><strong>hashCode()说明：</strong></p>
 <p>hashCode()是Object中的native方法，用于获取对象的哈希值，用于确定该对象在哈希表中的索引位置</p>
 <p>也就是将数据的内部存储地址转换成一个整数然后返回</p>
+<p>Object中hashCode()源码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public native int hashCode();</span><br></pre></td></tr></table></figure>
 
 
@@ -210,7 +217,7 @@
 <p>（2）如果hash的值相同，但是也不等说明两个完全一样，要进行equals判断，发现与已经存在的对象equals值也相同的话，就可以舍弃；否则创建该对象</p>
 <p><strong>这就得到了hashCode()和equals的关系：</strong></p>
 <ul>
-<li>如果重写了equals方法，有必要重写hashCode()方法的φ(*￣0￣)这是为啥。。。</li>
+<li>如果重写了equals方法，有必要重写hashCode()方法的：</li>
 <li>两个对象equals()返回为true，则hashCode()必为true</li>
 </ul>
 <ul>
@@ -248,6 +255,125 @@
 <p>4.synchronized(){}同步代码块，写在方法中</p>
 <p><strong>执行顺序：静态块(静态变量：按照编写顺序来，并且都只加载一次)→主方法（main）→成员变量、构造块（按照编写顺序来）→构造器代码→静态方法（调用了才加载）</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class Demo &#123;</span><br><span class="line"></span><br><span class="line">    int a &#x3D; print(3);&#x2F;&#x2F;5.加载成员变量，调用print(3)，输出&quot;实例3&quot;</span><br><span class="line">    public Demo() &#123;</span><br><span class="line">        System.out.println(&quot;构造方法&quot;);&#x2F;&#x2F;8.最后执行构造方法</span><br><span class="line">    &#125;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(&quot;非静态块&quot;);&#x2F;&#x2F;6.顺序执行到非静态块，输出&quot;非静态块&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    int b &#x3D; print(4);&#x2F;&#x2F;7.加载成员变量，调用print(4)，输出&quot;实例4&quot;</span><br><span class="line">    public int print(int value) &#123;</span><br><span class="line">        System.out.println(&quot;实例&quot; + value);</span><br><span class="line">        return value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static int i &#x3D; printStatic(1);&#x2F;&#x2F;1.加载静态变量，调用方法printStatic()，输出&quot;静态1&quot;</span><br><span class="line">    static &#123;</span><br><span class="line">        System.out.println(&quot;静态块&quot;);</span><br><span class="line">    &#125;&#x2F;&#x2F;2.按照顺序加载静态块，输出&quot;静态块&quot;</span><br><span class="line">    static int j &#x3D; printStatic(2);&#x2F;&#x2F;3.调用printStatic()，输出&quot;静态块2&quot;</span><br><span class="line">    public static int printStatic(int value) &#123;</span><br><span class="line">        System.out.println(&quot;静态&quot; + value);</span><br><span class="line">        return value;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Demo();&#x2F;&#x2F;4.开始执行主方法，到了类实例化过程</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Java的反射机制"><a href="#Java的反射机制" class="headerlink" title="Java的反射机制"></a>Java的反射机制</h3><p>反射机制：将类的各个组成部分封装成对象</p>
+<h3 id="为什么Java中总是经常重写toString-方法？"><a href="#为什么Java中总是经常重写toString-方法？" class="headerlink" title="为什么Java中总是经常重写toString()方法？"></a>为什么Java中总是经常重写toString()方法？</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public String toString();</span><br><span class="line">&#x2F;&#x2F;返回该对象的字符串表示</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果不重写该方法，返回的打印输出的值就是——对象类型+@+内存地址值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person@1b6d3456</span><br><span class="line">&#x2F;&#x2F;getClass().getName()+&quot;@&quot;+Integer.toHexString(hashCode());</span><br></pre></td></tr></table></figure>
+
+<p>当重写toString()方法后，打印的就是该对象中属性的值了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> &#x2F;&#x2F; 重写toString方法</span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Person&#123;&quot; +</span><br><span class="line">                &quot;age&#x3D;&quot; + age +</span><br><span class="line">                &quot;, name&#x3D;&#39;&quot; + name + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, height&#x3D;&quot; + height +</span><br><span class="line">                &#39;&#125;&#39;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;打印：Person&#123;age&#x3D;0,name&#x3D;&#39;null&#39;,height&#x3D;null&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Java中重载和重写的区别"><a href="#Java中重载和重写的区别" class="headerlink" title="Java中重载和重写的区别"></a>Java中重载和重写的区别</h3><table>
+<thead>
+<tr>
+<th align="center">比较点</th>
+<th align="center">重写（Overriding）</th>
+<th align="center">重载(Overloading)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">类数量</td>
+<td align="center">父子类、接口、实现类</td>
+<td align="center">本类</td>
+</tr>
+<tr>
+<td align="center">方法名称</td>
+<td align="center">相同</td>
+<td align="center">相同</td>
+</tr>
+<tr>
+<td align="center">参数列表</td>
+<td align="center">一定不能修改</td>
+<td align="center">必须修改</td>
+</tr>
+<tr>
+<td align="center">返回类型</td>
+<td align="center">一定不能修改</td>
+<td align="center">可以修改</td>
+</tr>
+<tr>
+<td align="center">异常</td>
+<td align="center">可以减少或删除，但不能修改</td>
+<td align="center">可以修改</td>
+</tr>
+</tbody></table>
+<p><strong>重载</strong></p>
+<p>重载发生在本类中，方法名必须相同，参数列表必须不同，但是和返回值、访问修饰符无关，值和方法名、参数列表、参数类型有关</p>
+<p>重载其实就是不同种情况的写法，就相当于都是跑步，唯一不同的就是用的工具不同，但是返回值（也就是结果不会影响）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Test&#123;</span><br><span class="line">    public void run(int foot)&#123;</span><br><span class="line">        System.out.println(&quot;步行&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    public int run(String bike)&#123;</span><br><span class="line">        System.out.println(&quot;自行车&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    protected void run(char train)&#123;</span><br><span class="line">        System.out.println(&quot;坐火车&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>重写</strong></p>
+<p>重写发生在父类子类之间，比如所有类都是继承Object类的，Object类中本身的equals、hashcode、toString方法，在任意子类中第一了重名和同样参数列表的话就是重写</p>
+<p>这样的话方法名、参数类型、参数列表、返回值都必须要相同</p>
+<p>访问权限不能比父类中被重写的方法更低，也就是只有长辈很难访问，后辈更容易被访问，不能反了；父类为public，子类不能是private或protected</p>
+<p>父类和子类在同一个包中，子类除声明为private和final的方法外都可以重写父类方法</p>
+<h3 id="接口和抽象类区别"><a href="#接口和抽象类区别" class="headerlink" title="接口和抽象类区别"></a>接口和抽象类区别</h3><table>
+<thead>
+<tr>
+<th align="center">比较点</th>
+<th align="center">接口</th>
+<th align="center">抽象类</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">方法</td>
+<td align="center">所有方法都是抽象的</td>
+<td align="center">同时包含抽象和非抽象方法</td>
+</tr>
+<tr>
+<td align="center">与其他类</td>
+<td align="center">类可以实现多个接口</td>
+<td align="center">类只能单继承一个抽象类</td>
+</tr>
+<tr>
+<td align="center">实现</td>
+<td align="center">可以不实现其中所有的方法</td>
+<td align="center">可以不实现其中的所有方法</td>
+</tr>
+<tr>
+<td align="center">成员变量</td>
+<td align="center">只能有static final成员变量</td>
+<td align="center">随意</td>
+</tr>
+<tr>
+<td align="center">实例化</td>
+<td align="center">不可以实例化，可以创建指向子类的对象</td>
+<td align="center">实现该接口的类必须实现接口中所有方法</td>
+</tr>
+</tbody></table>
+<h3 id="深拷贝和浅拷贝"><a href="#深拷贝和浅拷贝" class="headerlink" title="深拷贝和浅拷贝"></a>深拷贝和浅拷贝</h3><p><strong>浅拷贝</strong></p>
+<p>浅拷贝只拷贝了源对象的地址，源对象的值发生改变时，拷贝对象的值也会发生改变</p>
+<p>这种=浅拷贝就是因为Java约定处理基本类型的时候使用的是值传递，而引用类型时采用的是引用传递，也就是地址给新的对象，但是指向堆内同一个位置!!!不准确，Java都是值传递？？？！！！</p>
+<p> <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_26542493/article/details/103898866?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522161907053516780262579588%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=161907053516780262579588&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-103898866.first_rank_v2_pc_rank_v29&utm_term=java%E9%83%BD%E6%98%AF%E5%80%BC%E4%BC%A0%E9%80%92">为什么大家都说Java只有值传递？</a> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">User user1 &#x3D; new User();</span><br><span class="line">user1.setUsername(&quot;林启昕&quot;);</span><br><span class="line">user1.setPassword(&quot;123&quot;);</span><br><span class="line">&#x2F;&#x2F;浅拷贝</span><br><span class="line">User user2 &#x3D; user1; System.out.println(user1);</span><br><span class="line">System.out.println(user2);&#x2F;&#x2F;输出的地址值相同</span><br></pre></td></tr></table></figure>
+
+<p><strong>深拷贝</strong></p>
+<p>拷贝了一份值相同的新的对象，两者不再关联，地址不同</p>
+<p>深拷贝的方式：</p>
+<ul>
+<li>构造函数(new)？？？这个不是创建对象吗<br>但是创建对象过多时，new开销过大，不建议使用构造函数来拷贝</li>
+<li>重写clone方法<br>类实现Cloneable接口，并且重写Object中的clone()方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;Object中的clone()方法</span><br><span class="line">@Override</span><br><span class="line">protected Object clone() throws CloneNotSupportedException &#123;</span><br><span class="line">        return super.clone();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;重写clone()方法</span><br><span class="line">@Override</span><br><span class="line">public User clone() throws CloneNotSupportedException &#123;</span><br><span class="line">        return (User)super.clone();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>User深拷贝，这里调用的clone()方法时要用try/catch块接收异常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">User user1 &#x3D; new User();</span><br><span class="line">user1.setUsername(&quot;林启昕&quot;);</span><br><span class="line">user1.setPassword(&quot;123&quot;);</span><br><span class="line">&#x2F;&#x2F;浅拷贝</span><br><span class="line">User user2 &#x3D; null;</span><br><span class="line">try &#123;</span><br><span class="line">     user2 &#x3D; user1.clone();</span><br><span class="line">    &#125; catch (CloneNotSupportedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">System.out.println(user1);</span><br><span class="line">System.out.println(user2);</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>当类中只有一些基本数据类型的对象时，就可以采用上述方法进行深拷贝，但是当包含引用类型的对象时，就不能只是在该类中对类进行clone()，还要对非基本数据类型属性值也进行clone</strong></p>
+<p><strong>上述所说的非基本类型中不包含String??</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Date;</span><br><span class="line"></span><br><span class="line">class Obj implements Cloneable &#123;</span><br><span class="line">    private Date birth &#x3D; new Date();  &#x2F;&#x2F;对象</span><br><span class="line">    public Date getBirth() &#123;</span><br><span class="line">        return birth;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setBirth(Date birth) &#123;</span><br><span class="line">        this.birth &#x3D; birth;</span><br><span class="line">    &#125;</span><br><span class="line">    public void changeDate() &#123;</span><br><span class="line">        this.birth.setMonth(4);</span><br><span class="line">    &#125;</span><br><span class="line">    public Object clone() &#123;</span><br><span class="line">        Obj o &#x3D; null;</span><br><span class="line">        try &#123;</span><br><span class="line">            o &#x3D; (Obj)super.clone(); &#x2F;&#x2F;先执行浅复制</span><br><span class="line">        &#125;catch(CloneNotSupportedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        o.birth &#x3D; (Date)this.getBirth().clone(); &#x2F;&#x2F;深复制，没有这一步的话，两个对象的运行结果都是4月，原因是后面的深复制和浅复制的区别</span><br><span class="line">        return o;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class HashMap_ &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Obj a &#x3D; new Obj();</span><br><span class="line">        Obj b &#x3D; (Obj)a.clone();</span><br><span class="line">        b.changeDate();</span><br><span class="line">        System.out.println(&quot;a:&quot;+a.getBirth());</span><br><span class="line">        System.out.println(&quot;b:&quot;+b.getBirth());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
       
 
       
@@ -525,11 +651,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+                <a href="javascript:void(0)" class="js-tag color3">线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -537,11 +667,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">粤语歌</a>
+                <a href="javascript:void(0)" class="js-tag color4">LeetCode</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">陈奕迅</a>
+                <a href="javascript:void(0)" class="js-tag color2">Java Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Spring</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -554,6 +688,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">数据库知识点</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">笔试习题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">粤语歌</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">陈奕迅</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">计算机基本知识</a>
               </li>
              
               <li class="article-tag-list-item">

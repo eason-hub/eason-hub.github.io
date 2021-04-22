@@ -16,7 +16,7 @@
 <meta property="og:description" content="Http常见状态码：http状态码表示客户端http请求的返回结果，标记服务器端的处理是否正常或者是出现的错误 其中第一位指定了相应类别 1xx 接受的请求正在处理2xx 请求正常处理完毕3xx 需要进行附加操作来完成请求（比如重定向）4xx 客户端请求错误，服务器无法处理5xx 服务器处理请求错误 2xx200 OK 请求正常处理并返回204 No Content 返回的报文中没有资源返回206">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-04-14T09:49:07.000Z">
-<meta property="article:modified_time" content="2021-04-14T09:50:34.606Z">
+<meta property="article:modified_time" content="2021-04-22T14:44:49.239Z">
 <meta property="article:author" content="lqx">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -191,6 +191,80 @@
 <p>tcp在确认客户端接收到完整信息后，才会删除服务端系统中数据缓存</p>
 <p>tcp的可靠服务基于：校验和，重传机制，序号标识，滑动窗口，确认应答</p>
 <p>但是tcp只是点到点的，udp支持多对多传输通信</p>
+<h3 id="tcp滑动窗口机制"><a href="#tcp滑动窗口机制" class="headerlink" title="tcp滑动窗口机制"></a>tcp滑动窗口机制</h3><p>tcp之前使用的停等协议，完全依靠RTT超时重传机制，但是这样的话浪费资源，发送数据包的效率底下，出现的滑动窗口可以很大程度的改善并且扔保证tcp可靠传输，接收数据包顺序不改变的特点</p>
+<p>tcp的滑动窗口以字节为单位，并且将数据报文段分成四个部分——<strong>发送并且已确认、已发送但是未确认、未发送但是等待发送、未发送并且不可以发送</strong>接受方首先发送了报文中确定了接收方的窗口大小-20，ack值-31表明接收方期望收到来自发送方的31号序列号开始的报文</p>
+<p>发送方收到这两个字段后，就可创建自己的发送窗口-20，这个窗口内发送的数据包在未收到ACK确认时都要进行保留，方便在因为网络原因超时重传的时候来重发</p>
+<p>接收方接收到位于接收窗口内的数据，就可以暂时缓存，一边后续提交给上层；但是当接受的包中出现丢包的情况，可能就会再次发送<strong>累计ACK</strong>要求发送方重传；</p>
+<p>报文按序到达后，发送最大的ACK表示期望收到的下一个报文序号，这时候接收方的滑动窗口向后移动，发送方收到ACK后也向后移动</p>
+<h3 id="tcp拥塞控制"><a href="#tcp拥塞控制" class="headerlink" title="tcp拥塞控制"></a>tcp拥塞控制</h3><p>拥塞控制算法的假定条件：<br>数据单方向传送，接收方只发送确认报文<br>接收方总是有足够大的缓存空间，所以发送方的窗口大小由网络的拥塞程度决定<br>以最大报文段MSS的个数作为讨论单位，而不是字节</p>
+<blockquote>
+<p>发送方维护一个叫做cwnd的拥塞窗口变量，取决于网络的拥塞程度，并且动态变化<br>只要网络中没有出现拥塞，那么拥塞窗口就会增大一点，但是只要出现了拥塞，窗口就会减小</p>
+</blockquote>
+<p><strong>判断网络出现拥塞的依据：没有按时收到应当到达的确认报文就是出现了超时重传现象</strong></p>
+<blockquote>
+<p>发送方将拥塞窗口作为发送窗口swnd</p>
+</blockquote>
+<blockquote>
+<p>发送方维护了一个叫做慢开始门限ssthresh的变量</p>
+<blockquote>
+<p>当cwnd &lt; ssthresh时，使用慢开始算法<br>当cwnd &gt; ssthresh时，停止使用慢开始而改用拥塞避免算法<br>当cwnd = ssthresh时，两者都可</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>慢开始</li>
+</ul>
+<p> <strong>为啥指数增长还叫慢开始？</strong><br><strong>慢开始是刚开始注入网络的报文段少，因为虽然窗口增长很快，但这里的慢描述的是慢慢增长的过程，是为了试探拥塞的限度</strong></p>
+<ul>
+<li>拥塞避免</li>
+<li>快重传<br>使发送方尽快重传，而不是等超时后在重传<br>/12.jpg<br>接受放一直给发送方发送累计ACK（ACK3表明我接受方期望收到的是3号报文），比如收到了1、2号报文，3丢失，4，5，6收到，但是接收方一直发送ACK3表示我要的是3号，<strong>当累计收到连续的3个重复ACK时，就将该号报文立刻重传</strong>，而不是等到超时</li>
+<li>块恢复</li>
+</ul>
+<p><strong>慢开始+拥塞控制（Tahoe）</strong></p>
+<p>一开始从初始设定的cwnd的拥塞窗口初始值开始发送，并且每个传输轮次发送窗口swnd指数增长，当达到慢开始门限值时，开始使用拥塞避免算法，拥塞窗口值每次+1直到发送方检测到出现了丢包进行超时重传的现象，这时候设定新的ssthresh(慢开始门限)为当前发生网络拥塞时的拥塞窗口的一半（1/2cwnd），并从cwnd=1重新开始指数增长，直到达到新的ssthresh时再次启用拥塞避免算法窗口+1</p>
+<p><strong>快重传+快恢复（Reno）</strong></p>
+<p>有时，个别的报文段丢失并不是网络拥塞造成的，这导致发送方重传误以为拥塞<br>/13.jpg</p>
+<p>当发送方收到了三个重复确认的报文段时，启动快重传，但是此时不在进行慢开始算法，而是使用快恢复算法，更新慢开始门限值ssthresh为当前拥塞窗口的一半（1/2cwnd），并且此时的cwnd值不是1，而是等于新的ssthresh值（cwnd=ssthresh）此后在每次cwnd+1增长</p>
+<h3 id="http8种请求方式"><a href="#http8种请求方式" class="headerlink" title="http8种请求方式"></a>http8种请求方式</h3><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Get</td>
+<td align="center">请求指定的页面内容，并返回实体主体</td>
+</tr>
+<tr>
+<td align="center">Head</td>
+<td align="center">类似于get，但是返回的响应种没有具体内容，用于获取报头</td>
+</tr>
+<tr>
+<td align="center">Post</td>
+<td align="center">向指定资源提交数据处理请求（表单或文件），数据包含在请求体中</td>
+</tr>
+<tr>
+<td align="center">Put</td>
+<td align="center">从客户端向服务器传送的数据取代指定的文档内容</td>
+</tr>
+<tr>
+<td align="center">Delete</td>
+<td align="center">请求服务器删除指定界面</td>
+</tr>
+<tr>
+<td align="center">Connect</td>
+<td align="center">http1.1中预留给能够将链接方式改为管道方式的代理服务器</td>
+</tr>
+<tr>
+<td align="center">Options</td>
+<td align="center">允许客户端查看服务器性能</td>
+</tr>
+<tr>
+<td align="center">Trace</td>
+<td align="center">回显服务器收到的请求，用于测试和诊断</td>
+</tr>
+</tbody></table>
+<p>其中Post支持的数据格式：</p>
 
       
 
@@ -469,11 +543,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+                <a href="javascript:void(0)" class="js-tag color3">线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -481,11 +559,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">粤语歌</a>
+                <a href="javascript:void(0)" class="js-tag color4">LeetCode</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">陈奕迅</a>
+                <a href="javascript:void(0)" class="js-tag color2">Java Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Spring</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -498,6 +580,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">数据库知识点</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">笔试习题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">粤语歌</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">陈奕迅</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">计算机基本知识</a>
               </li>
              
               <li class="article-tag-list-item">
