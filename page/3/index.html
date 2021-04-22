@@ -764,7 +764,7 @@
 <p>但是我的电脑中有两个相同版本的JRE和JDK:</p>
 <p>JDK内外的JRE都可以为Java提供开发的运行环境，但是JDK自带的开发工具只能使用自己的JRE</p>
 <p>实际开发：JDK调用本地API开发Java程序，通过JDK中javac工具编译成Java.class后，在外部JRE上运行字节码文件，JVM来解释.class文件变成机器语言后再不同的os上使用</p>
-<p>11.jpg</p>
+<p><img src="/img/11.jpg"></p>
 <p><strong>在JVM中垃圾只能存在于堆和方法区中，栈、本地方法栈、程序计数器内不可能有垃圾，也不会有垃圾回收，否则无法弹出的话，最下面的main方法无法弹出，程序没有出口</strong></p>
 <p><strong>因此JVM的调优就是在堆内调优</strong></p>
 <hr>
@@ -945,7 +945,7 @@
 
 
 <p>hashCode()的存在也决定了数据在哈希表中的存储方式：</p>
-<p>//这里有个图片 ./blog/source/2.jpg</p>
+<p><img src="/img/2.jpg"></p>
 <p>要放入到哈希表中的元素首先要经历一些判断：</p>
 <p>（1）通过hashCode()来获取hash值，这个值也就是通过哈希函数获取的在数组中的位置值，根据哈希函数的运算规则，这个值有可能相同，不同的话，那就绝对不存在这个对象，可以创建新的空间放入到集合中</p>
 <p>（2）如果hash的值相同，但是也不等说明两个完全一样，要进行equals判断，发现与已经存在的对象equals值也相同的话，就可以舍弃；否则创建该对象</p>
@@ -962,7 +962,7 @@
 <li><p>两个对象hashCode()返回不同int，则equals()返回必定为false</p>
 </li>
 </ul>
-<h3 id="基本数据类型所占字节大小"><a href="#基本数据类型所占字节大小" class="headerlink" title="基本数据类型所占字节大小"></a>基本数据类型所占字节大小</h3><p>此处有图片./blog/source/3.png</p>
+<h3 id="基本数据类型所占字节大小"><a href="#基本数据类型所占字节大小" class="headerlink" title="基本数据类型所占字节大小"></a>基本数据类型所占字节大小</h3><p><img src="/img/3.png"></p>
 <p><strong>基本数据类型和对应的包装类的区分</strong></p>
 <p>Integer和int区别:</p>
 <p>Integer是int的包装类，int是Java的基本数据类型</p>
@@ -1171,217 +1171,6 @@
 
 
   
-    <article id="post-Java集合Collection——List接口02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A302/">Java集合Collection——List接口02</a>
-    </h1>
-  
-
-        
-        <a href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A302/" class="archive-article-date">
-  	<time datetime="2021-04-07T11:02:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="ArrayList子类"><a href="#ArrayList子类" class="headerlink" title="ArrayList子类"></a>ArrayList子类</h3><h4 id="ArrayList子类特点"><a href="#ArrayList子类特点" class="headerlink" title="ArrayList子类特点"></a>ArrayList子类特点</h4><p>1.ArrayList类可以加入任何值，加入null,也可以加入多个null</p>
-<p>2.ArrayList底层由数组来实现的</p>
-<p>3.但是ArrayList线程不安全，可是执行效率高，在多线程情况下不建议使用ArrayList</p>
-<p>add方法源码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public boolean add(E e)</span><br><span class="line">&#123;</span><br><span class="line">    ensureCapacityInternal(size+1);</span><br><span class="line">    elementDatal[size++]&#x3D;e;</span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><em>源码中没有synchronized同步，就没有线程安全的控制</em></p>
-<h4 id="ArrayList的底层机制与源码分析"><a href="#ArrayList的底层机制与源码分析" class="headerlink" title="ArrayList的底层机制与源码分析"></a>ArrayList的底层机制与源码分析</h4><p>1.ArrayList维护了一个Object类型的数组——elementData.transient Object[] elementData</p>
-<p><em>transient表示瞬间的、短暂的，也就是当对象被该关键字修饰时，表示该属性不会被序列化</em></p>
-<p>2.当创建ArrayList对象时，如果使用的时无参构造器ArrayList()，则初始的elementData容量为0，第一次添加数据，扩容为10；以后再次扩容elementData为1.5倍</p>
-<p>3.如果使用的是指定大小的构造器，初始的elementData容量为指定大小；如果需要扩容，则直接扩容为elementData的1.5倍，后续都是前者的1.5倍，以此类推</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A302/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java集合Collection——List接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A3/">Java集合Collection——List接口</a>
-    </h1>
-  
-
-        
-        <a href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A3/" class="archive-article-date">
-  	<time datetime="2021-04-07T08:14:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="List特点"><a href="#List特点" class="headerlink" title="List特点"></a>List特点</h3><p>1.List是Collection接口的子接口</p>
-<p>2.List集合中元素有序，元素可以重复，按照存放的顺序来取出元素</p>
-<p>3.List接口中的每一个元素都有其对应的顺序索引，也就是List的底层为数组</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.get(index);&#x2F;&#x2F;也就是支持get(index)通过索引获取数据index从0开始</span><br></pre></td></tr></table></figure>
-
-<p>4.Java API中实现List接口的类很多：Vector、ArrayList、LinkedList、Stack…</p>
-<h3 id="List常用方法"><a href="#List常用方法" class="headerlink" title="List常用方法"></a>List常用方法</h3><p>1.指定位置插入元素</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void add(int index,Object ele);</span><br></pre></td></tr></table></figure>
-
-<p>当不指定index时，默认插入到List的末尾</p>
-<p>2.指定位置插入集合元素</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">boolean addAll(int index,Collection eles);</span><br></pre></td></tr></table></figure>
-
-<p>3.获取指定位置元素</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object get(int index);</span><br></pre></td></tr></table></figure>
-
-<p>4.返回obj在集合中首次出现的位置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int indexOf(Object obj);</span><br></pre></td></tr></table></figure>
-
-<p>5.返回obj在集合中最后一次出现的位置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int lastIndexOf(Object obj);</span><br></pre></td></tr></table></figure>
-
-<p>6.移除指定index位置的元素，并返回此元素</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object remove(int index);</span><br></pre></td></tr></table></figure>
-
-<p>7.替换某位置的元素为另一个值:当没有这个index时，控制台报错：IndexOutOfBoundException</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object set(int index, Object ele);</span><br></pre></td></tr></table></figure>
-
-<p>8.返回从fromIndex到toIndex的集合</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List subList(int fromIndex,int toIndex);</span><br></pre></td></tr></table></figure>
-
-<p>但是实际返回的集合是下标[fromIndex,toIndex-1]!!!</p>
-<h3 id="List常用遍历方法"><a href="#List常用遍历方法" class="headerlink" title="List常用遍历方法"></a>List常用遍历方法</h3><h4 id="iterator模式"><a href="#iterator模式" class="headerlink" title="iterator模式"></a>iterator模式</h4><h4 id="增强for模式"><a href="#增强for模式" class="headerlink" title="增强for模式"></a>增强for模式</h4>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/07/Java%E9%9B%86%E5%90%88Collection%E2%80%94%E2%80%94List%E6%8E%A5%E5%8F%A3/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-粤语歌——《完》" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1431,6 +1220,146 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/04/06/%E7%B2%A4%E8%AF%AD%E6%AD%8C%E2%80%94%E2%80%94%E3%80%8A%E5%AE%8C%E3%80%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-搭建博客问题汇总" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/03/%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/">搭建博客问题汇总</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/03/%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" class="archive-article-date">
+  	<time datetime="2021-04-03T14:33:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.网络问题：</p>
+<p>可能因为翻墙吧。。。所有外网访问都是问题（额）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OpenSSL SSL_read: Connection was reset, errno 10054</span><br></pre></td></tr></table></figure>
+<p>大概是网络不稳定，链接超时导致的，还有就是ssl密钥？<br>执行这个命令，解除ssl验证：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.sslVerify &quot;false&quot;</span><br></pre></td></tr></table></figure>
+
+<p>第一次执行这条命令的时候会有git的ssl链接输入密码？？（大概是，具体我查查）</p>
+<p><img src="/img/1.jpg"></p>
+<p>我的天完事开头难，我就插入个上面的截图给我搞得心态爆炸了o(*≧▽≦)ツ┏━┓</p>
+<p>2.还是网络问题：</p>
+<p>因为要翻墙，但是挂的梯子还是不稳定总是出现“Failed to connect to github.com port 443: Timed out”的问题，干脆面向百度解决问题，修改了hosts文件，对访问github别在受限了啊啊啊啊啊</p>
+<p>在hosts文件里面加上这个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#github</span><br><span class="line">#192.30.253.112 github.com</span><br><span class="line">#151.101.185.194 github.global.ssl.fastly.net</span><br></pre></td></tr></table></figure>
+
+<p>因为hosts为系统文件，在修改之前右键点击属性-安全-找到电脑用户Users-增加一下权限就可以了</p>
+<p>绝了绝了！！！！！修改了第二条，第一条的指令不用加上了！！！！！掘了掘了！！！<br>好吧。。并没有，我试了一次，还是要第一条emmmmmm</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/03/%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-idea快捷键汇总" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/03/idea%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%B1%87%E6%80%BB/">idea快捷键汇总</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/03/idea%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%B1%87%E6%80%BB/" class="archive-article-date">
+  	<time datetime="2021-04-03T13:03:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/03/idea%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%B1%87%E6%80%BB/">展开全文 >></a>
         </p>
       
 

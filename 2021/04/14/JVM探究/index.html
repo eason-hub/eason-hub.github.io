@@ -15,11 +15,13 @@
 <meta property="og:site_name" content="07♥的主页">
 <meta property="og:description" content="概述本机虚拟机类型——JavaHotSpot 1cmd→ java -version  JVM位置JVM运行在os之上，JVM是使用C写的程序；JRE包含了JVM； JDK包含JRE，JRE包含JVMJDK：Java development kit——Java开发工具包JRE：Java runtime environment——Java的运行环境（lib+bin）JVM：Java Virtual">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/11.jpg">
 <meta property="article:published_time" content="2021-04-14T09:47:46.000Z">
-<meta property="article:modified_time" content="2021-04-14T09:48:31.863Z">
+<meta property="article:modified_time" content="2021-04-22T15:01:37.753Z">
 <meta property="article:author" content="lqx">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/11.jpg">
   
     <link rel="alternative" href="/atom.xml" title="07♥的主页" type="application/atom+xml">
   
@@ -189,7 +191,7 @@
 <p>但是我的电脑中有两个相同版本的JRE和JDK:</p>
 <p>JDK内外的JRE都可以为Java提供开发的运行环境，但是JDK自带的开发工具只能使用自己的JRE</p>
 <p>实际开发：JDK调用本地API开发Java程序，通过JDK中javac工具编译成Java.class后，在外部JRE上运行字节码文件，JVM来解释.class文件变成机器语言后再不同的os上使用</p>
-<p>11.jpg</p>
+<p><img src="/img/11.jpg"></p>
 <p><strong>在JVM中垃圾只能存在于堆和方法区中，栈、本地方法栈、程序计数器内不可能有垃圾，也不会有垃圾回收，否则无法弹出的话，最下面的main方法无法弹出，程序没有出口</strong></p>
 <p><strong>因此JVM的调优就是在堆内调优</strong></p>
 <hr>
