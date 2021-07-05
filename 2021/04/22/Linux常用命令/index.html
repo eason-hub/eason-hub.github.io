@@ -8,15 +8,21 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>Linux常用命令 | 07♥的主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
+  <meta name="description" content="Linux命令ls 查看目录下所有文件mkdir 创建目录ll 查看文件属性（可显示文件权限，大小，最近被访问时间等）sudo su普通用户切换到rootsu - lingqixinroot切换到lingqixin用户 查看日志命令 tail -n 显示后多少行的日志 123tail -100f test.log &#x2F;&#x2F;实时监控100行日志tail -n 10 test.log">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Linux常用命令">
 <meta property="og:url" content="http://example.com/2021/04/22/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
 <meta property="og:site_name" content="07♥的主页">
+<meta property="og:description" content="Linux命令ls 查看目录下所有文件mkdir 创建目录ll 查看文件属性（可显示文件权限，大小，最近被访问时间等）sudo su普通用户切换到rootsu - lingqixinroot切换到lingqixin用户 查看日志命令 tail -n 显示后多少行的日志 123tail -100f test.log &#x2F;&#x2F;实时监控100行日志tail -n 10 test.log">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/37.png">
+<meta property="og:image" content="http://example.com/img/38.png">
+<meta property="og:image" content="http://example.com/img/40.png">
 <meta property="article:published_time" content="2021-04-22T14:12:21.000Z">
-<meta property="article:modified_time" content="2021-04-22T14:12:21.359Z">
+<meta property="article:modified_time" content="2021-07-04T14:13:43.037Z">
 <meta property="article:author" content="lqx">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/37.png">
   
     <link rel="alternative" href="/atom.xml" title="07♥的主页" type="application/atom+xml">
   
@@ -176,7 +182,53 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h3 id="Linux命令"><a href="#Linux命令" class="headerlink" title="Linux命令"></a>Linux命令</h3><p><code>ls</code> 查看目录下所有文件<br><code>mkdir</code> 创建目录<br><code>ll</code> 查看文件属性（可显示文件权限，大小，最近被访问时间等）<br><code>sudo su</code>普通用户切换到root<br><code>su - lingqixin</code>root切换到lingqixin用户</p>
+<p><strong>查看日志命令</strong></p>
+<p><code>tail -n</code> 显示后多少行的日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tail -100f test.log &#x2F;&#x2F;实时监控100行日志</span><br><span class="line">tail -n 10 test.log &#x2F;&#x2F;查询日志尾部的最后10行</span><br><span class="line">tail -n +10 test.log &#x2F;&#x2F;查询10行之后的所有日志</span><br></pre></td></tr></table></figure>
+
+<p><code>head -n</code> 显示前多少行日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">head -n 10 test.log</span><br><span class="line">&#x2F;&#x2F;查询日志文件前10行</span><br><span class="line">head -n -10 test.log &#x2F;&#x2F;查询日志文件除了最后10行的所有日志</span><br></pre></td></tr></table></figure>
+
+<p><code>cat -n test.log | grep &quot;debug&quot;</code> 查询关键字的日志</p>
+<p><code>cat -n test.log | grep &quot;debug&quot; | more</code> 日志文件太多使用more分页显示</p>
+<p><strong>Linux关于CPU命令</strong></p>
+<p>在Linux的系统维护中，可能需要经常查看CPU使用率，分析系统整体的运行情况；而监控CPU性能包括：<strong>运行队列、CPU使用率和上下文切换</strong></p>
+<p><code>cat /etc/issue | grep Linux</code> 查看当前系统发行版信息</p>
+<p><code>cat /proc/cpuinfo | grep &quot;cores&quot;| uniq</code> 查看cpu几核</p>
+<p><code>top</code> 总体的系统运行状态和cpu的使用率<br><img src="/img/37.png"></p>
+<ul>
+<li>%us：表示用户空间程序的cpu使用率</li>
+<li>%sy：表示系统空间的cpu使用率，主要是内核程序</li>
+<li>%ni：表示用户空间且通过nice调度过的程序的cpu使用率。</li>
+<li>%id：空闲cpu</li>
+<li>%wa：cpu运行时在等待io的时间</li>
+<li>%hi：cpu处理硬中断的数量</li>
+<li>%si：cpu处理软中断的数量</li>
+<li>%st：被虚拟机偷走的cpu</li>
+</ul>
+<p><code>dstat</code> 每秒cpu使用率情况获取<br><img src="/img/38.png"></p>
+<p><code>dstat --top-cpu</code>最占cpu进程获取</p>
+<p><strong>Linux关于进程命令</strong></p>
+<p><code>ps</code> Process Status查看Linux中当前运行的进程的命令，列出系统中运行进程，包括进程号、命令、CPU使用量、内存使用量等</p>
+<p><code>pstree</code> Linux中每一个进程都是由其父进程创建的；pstree以可视化方式显示进程，通过显示进程的树状图来展示进程间关系。如果指定了pid了，那么树的根是该pid，不然将会是init（pid:1）</p>
+<p><code>top</code> <strong>实时</strong>的监控系统状态信息和进程所使用的资源。显示进程的数据包括 PID、进程属主、优先级(NI)、%CPU、%memory等。可以使用这些显示指示出资源使用量，进程优先级从-20~19，值越低，优先级越高</p>
+<p><code>nice</code> 用户可以设置和改变进程的优先级； nice &lt;优先值&gt; &lt;进程名&gt;  -  通过给定的优先值启动一个程序</p>
+<p><code>kill &lt;pid&gt;</code> 用来发送信号给进程，结束进程；可以先使用ps获得进程id号</p>
+<p><strong>Linux关于内存命令</strong></p>
+<p><code>free</code> 查看内存的使用情况<br><img src="/img/40.png"></p>
+<ul>
+<li>total:总计物理内存的大小</li>
+<li>used:已使用多大</li>
+<li>free:可用有多少</li>
+<li>Shared:多个进程共享的内存总额</li>
+<li>Buffers/cached:磁盘缓存的大小</li>
+<li>第三行(-/+ buffers/cached):</li>
+<li>used:已使用多大</li>
+<li>free:可用有多少</li>
+</ul>
+<h3 id="Shell指令"><a href="#Shell指令" class="headerlink" title="Shell指令"></a>Shell指令</h3><p><code>echo -n &quot;***&quot;</code>在终端显示***并且不换行<br><code>echo -e &quot;****&quot;</code>也是显示文字，但是对转义字符按照对应方式处理<br><code>echo $A</code>A为变量，要输出变量的值一定加上$符号<br><code>:nu</code>vim格式下，esc后输入显示当前光标所在行号<br><code>#</code> 单行注释<br><code>:&gt;&gt;!一行   ！</code>多行注释<br><code>/root/shcode/myshell.sh &amp;</code>想要一个进程在后台执行要加<code>&amp;</code></p>
+
       
 
       
@@ -436,15 +488,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">线程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Java API</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -456,15 +504,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Java API</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Spring</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">查找</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -476,10 +520,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">笔试习题</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">粤语歌</a>
               </li>
              
@@ -488,11 +528,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">笔试习题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">计算机基本知识</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">查找</a>
               </li>
              
               <li class="article-tag-list-item">

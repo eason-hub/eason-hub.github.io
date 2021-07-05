@@ -156,6 +156,516 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-LeetCode手撕——字符串" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/LeetCode%E6%89%8B%E6%92%95%E2%80%94%E2%80%94%E5%AD%97%E7%AC%A6%E4%B8%B2/">LeetCode手撕——字符串</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/LeetCode%E6%89%8B%E6%92%95%E2%80%94%E2%80%94%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:46:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="获取最长无重复字符的子串"><a href="#获取最长无重复字符的子串" class="headerlink" title="获取最长无重复字符的子串"></a>获取最长无重复字符的子串</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int lengthOfLongestSubstring(String s) &#123;</span><br><span class="line">        Set&lt;Character&gt; occ &#x3D; new HashSet&lt;Character&gt;();</span><br><span class="line">        int n&#x3D;s.length();</span><br><span class="line">        int rk&#x3D;-1,ans&#x3D;0;</span><br><span class="line">        &#x2F;&#x2F;rk表示的是后面的指针</span><br><span class="line"></span><br><span class="line">        for(int i&#x3D;0;i&lt;n;i++)&#x2F;&#x2F;i代表头指针</span><br><span class="line">        &#123;</span><br><span class="line">            if(i!&#x3D;0)</span><br><span class="line">            &#123;</span><br><span class="line">                occ.remove(s.charAt(i-1));</span><br><span class="line">            &#125;</span><br><span class="line">            while(rk+1&lt;n&amp;&amp;!occ.contains(s.charAt(rk+1)))&#123;&#x2F;&#x2F;保证左指针不超过长度，并且哈希表中不包含下一个字符，也就是没有重复字符</span><br><span class="line">            occ.add(s.charAt(rk+1));&#x2F;&#x2F;将该字符放入到哈希表中</span><br><span class="line">            ++rk;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            ans&#x3D;Math.max(ans,rk-i+1);&#x2F;&#x2F;获取所有不含重复子串的最长的子串</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        return ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="求最长回文子串"><a href="#求最长回文子串" class="headerlink" title="求最长回文子串"></a>求最长回文子串</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public String longestPalindrome(String s) &#123;</span><br><span class="line">       String res&#x3D;&quot;&quot;;</span><br><span class="line"></span><br><span class="line">        int start&#x3D;0,end&#x3D;0;</span><br><span class="line">        for(int i&#x3D;0;i&lt;s.length();i++)&#123;&#x2F;&#x2F;每次循环都将该位置的字符作为回文的中心字符，分奇偶两种情况进行讨论</span><br><span class="line">            </span><br><span class="line">            &#x2F;&#x2F;回文串为奇数，从一个中心点扩展</span><br><span class="line">            String s1&#x3D;expandAroundCenter(s,i,i);</span><br><span class="line">            &#x2F;&#x2F;回文串为偶数，从两个中心点扩展</span><br><span class="line">            String s2&#x3D;expandAroundCenter(s,i,i+1);</span><br><span class="line">           </span><br><span class="line">            res&#x3D;res.length()&gt;s1.length()?res:s1;</span><br><span class="line">            res&#x3D;res.length()&gt;s2.length()?res:s2;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String expandAroundCenter(String s,int left,int right)&#123;</span><br><span class="line"></span><br><span class="line">        while(left&gt;&#x3D;0&amp;&amp;right&lt;s.length()&amp;&amp;s.charAt(left)&#x3D;&#x3D;s.charAt(right))</span><br><span class="line">        &#123;</span><br><span class="line">            left--;</span><br><span class="line">            right++;</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;从中心开始扩展，左右两侧的指针没有越界并且值相同，就可以往外扩展</span><br><span class="line">        return s.substring(left+1,right);&#x2F;&#x2F;返回当前字符为中心点的最长回文串</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">LeetCode</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法//" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/LeetCode%E6%89%8B%E6%92%95%E2%80%94%E2%80%94%E5%AD%97%E7%AC%A6%E4%B8%B2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-数据结构——树" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E2%80%94%E2%80%94%E6%A0%91/">数据结构——树</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E2%80%94%E2%80%94%E6%A0%91/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:38:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="二叉树（BST、AVL）"><a href="#二叉树（BST、AVL）" class="headerlink" title="二叉树（BST、AVL）"></a>二叉树（BST、AVL）</h3><ul>
+<li><p>二叉搜索（排序）树BST：若左子树不为空，则左子树上的所有节点的值均小于他的根节点的值；如果他的右子树不为空，则右子树山的所有节点值均大于它的根节点值，时间复杂度为O(logn)</p>
+</li>
+<li><p>二叉搜索树的缺陷，输入数据为递增或 递减时当退化成链表的时候效率变成了O(n)</p>
+</li>
+</ul>
+<p><strong>那么如何避免上面2的这种缺陷呢？</strong><br>如果插入元素时，树可以自动调整使得两边平衡——平衡二叉树AVL</p>
+<ul>
+<li><p>依靠左旋或右旋的方法让树平衡，AVL约定最短和最长子树高度差不能超过1，</p>
+</li>
+<li><p>AVL树通过插入性能的损失来弥补查询性能的提升</p>
+</li>
+</ul>
+<p><strong>那么如何避免在插入远大于查找过程中的性能损失呢——引入红黑树</strong></p>
+<h3 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h3><p>红黑树属于二叉搜索树的一个分支，也借鉴了AVL树中左右旋的方法</p>
+<ul>
+<li><p>红黑树根节点一定是黑色</p>
+</li>
+<li><p>每个叶子节点为黑色（NIL节点）</p>
+</li>
+<li><p><strong>每个红色节点的两个子节点为黑色，也就是不存在两个红色的节点相连</strong></p>
+</li>
+<li><p>任意一个节点到每个叶子节点的路径都包含<strong>数量相同的黑节点</strong>——黑高</p>
+</li>
+<li><p>最长子树不超过最短子树的两倍即可</p>
+</li>
+</ul>
+<h3 id="构造红黑树——左旋、右旋、变色"><a href="#构造红黑树——左旋、右旋、变色" class="headerlink" title="构造红黑树——左旋、右旋、变色"></a>构造红黑树——左旋、右旋、变色</h3><p>图片./blog/img/4.png</p>
+<p>1.左旋</p>
+<p>图片./blog/img/5.gif</p>
+<p>2.右旋</p>
+<p>图片./blog/img/7.gif</p>
+<h3 id="红黑树的插入"><a href="#红黑树的插入" class="headerlink" title="红黑树的插入"></a>红黑树的插入</h3><p>插入后要对两边进行平衡调整，默认带插入的节点都是红色的</p>
+<p>1.当红黑树为空树：</p>
+<p>直接将节点插入作为根节点，并且根据性质2，要将节点设置为黑色，NIL节点为黑色</p>
+<p>2.要插入的节点在树中已经存在，直接替换值就可以</p>
+<p>3.插入节点的父节点为黑色节点，直接按照正常排序二叉树的插入就可以</p>
+<p>4.插入节点的父节点为红色节点，那么就说明当前的节点一定存在一个根节点为黑色的：</p>
+<ul>
+<li>将该节点的父亲和叔叔节点该为黑色，爷爷节点改为红色，爷爷节点作为当前节点进行后续处理<br>图片./blog/img/8.jpg</li>
+</ul>
+<ul>
+<li><p>当叔叔节点不存在或者为NIL黑色节点，并且插入节点的父亲节点为爷爷的左子节点，此时要分情况讨论：<br>图片./blog/img/9.jpg</p>
+<p>  （1）当要插入的节点在父亲节点的左边时——LL双红——右旋</p>
+<p>  将父亲节点变成黑色，爷爷节点变成红色；对爷爷节点进行右旋<br>  图片./blog/img/10.jpg</p>
+</li>
+</ul>
+<p><strong>但是随着插入的数据变多不可避免地因为每棵树只有两个子树导致树的深度变大——B树</strong></p>
+<h3 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h3><p>Max Degree:表示每个节点可以放的最大记录（表示<strong>达到degree值</strong>后就要进行拆分）</p>
+<ul>
+<li>B树中允许有相同值的存储，相同的值放在要插入的节点右侧</li>
+</ul>
+<p>具体的存储格式如图：<br>/14.jpg</p>
+<p><strong>但是对于&lt;K,V&gt;中Key和Value一同存储就导致了资源的浪费，既然K作为主键值唯一确定V值，只存储K就可以了——B+树</strong></p>
+<h3 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h3><p>存储结构见图：<br>/15.jpg</p>
+<ul>
+<li>B+树只有在叶子节点中存储数据，而在非叶子节点中不存储Value的值，只存储Key</li>
+<li>B+树的叶子节点是一个双向链表</li>
+</ul>
+<p>一般情况下MySQL使用的B+树只要是3-4层足够了，如果发现不够，就有可能要进行分表分库存储</p>
+<p>Q：创建索引时用int还是varchar?<br>A：因为存储时指针的大小是固定的，之能尽可能的让Key的值尽量少的占用非叶子结点的存储空间，这样就能增加每个节点存储的degree值（记录数），所以如果varchar小于4字节，用varchar；反之用int</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法//" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E2%80%94%E2%80%94%E6%A0%91/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-计算机基本常识" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B8%B8%E8%AF%86/">计算机基本常识</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B8%B8%E8%AF%86/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:36:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="utf-8和ASCII和Unicode编码区别："><a href="#utf-8和ASCII和Unicode编码区别：" class="headerlink" title="utf-8和ASCII和Unicode编码区别："></a>utf-8和ASCII和Unicode编码区别：</h3><p>ASCII 支持英文 1个字节——最早的127个字符，中国制定了GB2312加入中文</p>
+<p>unicode 所有语言 2个字节——将所有语言统一到编码中，但是英文也用unicode浪费空间</p>
+<p>UTF-8 所有语言 英文1字节、汉字3字节——节省空间，并且包含ASCII</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">计算机基本知识</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B8%B8%E8%AF%86/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Spring探究" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/Spring%E6%8E%A2%E7%A9%B6/">Spring探究</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/Spring%E6%8E%A2%E7%A9%B6/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:34:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="对Spring理解？"><a href="#对Spring理解？" class="headerlink" title="对Spring理解？"></a>对Spring理解？</h3><p>Spring就是<strong>轻量级、非入侵式</strong>的Java开发框架，简化企业级服务器的开发，几乎所有的开发都是依靠Spring为基础的，Spring的容器作用用来承载Java中的bean对象；</p>
+<p>Spring以interface21为基础</p>
+<p>Spring帮助我们完成了bean对象从<strong>创建，使用到销毁的管理全过程</strong>，这个过程可以通过配置文件或者是注解的方式来完成</p>
+<p>程序启动后，完成bean的解析和创建以及实例化操作，这里可以通过反射的方式来进行实例化，方便后续直接使用bean</p>
+<p>Spring中最重要的特点就是**IOC(控制反转)、AOP(面向切面编程)**，并且支持事务处理</p>
+<h3 id="框架发展"><a href="#框架发展" class="headerlink" title="框架发展"></a>框架发展</h3><p>SSH:Struct2+Spring+Hibernate<br>SSM:SpringMVC+Spring+Mybatis</p>
+<p>Spring——官网<br>Spring Maven——官网依赖远程包仓库xml地址<br>例如5.3.4版本的Maven</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;org.springframework&#x2F;spring-web --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-web&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;5.3.4&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="Spring的七大组成"><a href="#Spring的七大组成" class="headerlink" title="Spring的七大组成"></a>Spring的七大组成</h3><p>/图片1.png</p>
+<p>Spring Boot：<br>一个快速开发的脚手架，基于SpringBoot可以快速开发一个微服务</p>
+<p>Spring Cloud:<br>基于Spring Boot实现</p>
+<h3 id="IOC和AOP两个重要的观点"><a href="#IOC和AOP两个重要的观点" class="headerlink" title="IOC和AOP两个重要的观点"></a>IOC和AOP两个重要的观点</h3><ul>
+<li>控制反转IOC</li>
+</ul>
+<p>通过<strong>xml或者是注解</strong>通过第三方去生产或者获取对象，在Spring中实现控制反转的是IOC容器，实现的方法是DI(依赖注入)</p>
+<p>控制：传统使用程序本身控制对象的创建，使用Spring后，对象是由Spring来创建的</p>
+<p>反转：程序本身不创建对象，而变成被动接收对象</p>
+<p>依赖注入：依靠Set()方法来注入</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/Spring%E6%8E%A2%E7%A9%B6/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-List接口-03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/22/List%E6%8E%A5%E5%8F%A3-03/">List接口-03</a>
+    </h1>
+  
+
+        
+        <a href="/2021/04/22/List%E6%8E%A5%E5%8F%A3-03/" class="archive-article-date">
+  	<time datetime="2021-04-22T14:25:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="LinkedList底层机制"><a href="#LinkedList底层机制" class="headerlink" title="LinkedList底层机制"></a>LinkedList底层机制</h3><ul>
+<li>LinkedList底层实现了双向链表和双端队列的数据结构</li>
+</ul>
+<p><strong>底层双向链表</strong>首尾节点分别由Node first和Node last来指向，每个Node节点又包含prev、next、item三个属性</p>
+<p>基于双向链表的特点，LinkedList的添加和删除效率更高</p>
+<ul>
+<li><p>LinkedList添加元素可以重复，包括多个null</p>
+</li>
+<li><p>LinkedList线程不安全</p>
+</li>
+</ul>
+<h3 id="LinkedList源码"><a href="#LinkedList源码" class="headerlink" title="LinkedList源码"></a>LinkedList源码</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Java Collections</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java-API//" class="article-tag-list-link color4">Java API</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/04/22/List%E6%8E%A5%E5%8F%A3-03/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-LeetCode手撕——栈" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -741,490 +1251,6 @@
 
 
   
-    <article id="post-Map接口-04" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-04/">Map接口-04</a>
-    </h1>
-  
-
-        
-        <a href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-04/" class="archive-article-date">
-  	<time datetime="2021-04-22T14:15:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="LinkedHashMap特点"><a href="#LinkedHashMap特点" class="headerlink" title="LinkedHashMap特点"></a>LinkedHashMap特点</h3><ul>
-<li>LinkedHashMap继承自HashMap，实现了Map接口，不同的LinkedHashMap在底层维护了一个双向链表</li>
-<li>LinkedHashMap(int ,float, boolean)这个构造器中，为true时设置为访问的顺序存储，否则默认以put的顺序存储</li>
-</ul>
-<h3 id="集合类的选择规范"><a href="#集合类的选择规范" class="headerlink" title="集合类的选择规范"></a>集合类的选择规范</h3><ul>
-<li>首先判断对象类型为<br>单例：Collection接口中List、Set<br>&emsp;允许重复：List<br>&emsp;&emsp;增删多：LinkedList(链表)<br>&emsp;&emsp;改查多：ArrayList(数组)<br>&emsp;不允许重复：Set<br>&emsp;&emsp;无序：HashSet(HashMap)<br>&emsp;&emsp;排序：TreeSet<br>&emsp;&emsp;插入和取出的顺序一致：LinkedHashSet<br>&emsp;<br>键值对：Map接口<br>&emsp;无序：HashMap<br>&emsp;排序：TreeMap<br>&emsp;插入和取出的顺序一致：LinkedHashMap<br>&emsp;能够读取文件：Properties</li>
-</ul>
-<h3 id="Map接口类汇总"><a href="#Map接口类汇总" class="headerlink" title="Map接口类汇总"></a>Map接口类汇总</h3><table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">底层结构</th>
-<th align="center">是否线程同步</th>
-<th align="center">扩容机制</th>
-<th align="center">存储特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">HashMap</td>
-<td align="center">数组+链表+红黑树</td>
-<td align="center">否</td>
-<td align="center">当数组达到64，链表数达到8就会发生树化</td>
-<td align="center">Key只有一个为Null，Value可以多个为null，遍历时获取数据随机</td>
-</tr>
-<tr>
-<td align="center">Hashtable</td>
-<td align="center">Entry类型数组(Hash值存储)</td>
-<td align="center">是</td>
-<td align="center">初始值11个Entry数组，达到极限值就按照极限值*加载因子进行再次扩容</td>
-<td align="center">不允许存储null，遍历获取数随机</td>
-</tr>
-<tr>
-<td align="center">TreeMap</td>
-<td align="center">红黑树</td>
-<td align="center">否</td>
-<td align="center"></td>
-<td align="center">像Comparator参数传值按照特定顺序存储，null可以存一个，默认按照字符串升序存储</td>
-</tr>
-<tr>
-<td align="center">LinkedHashMap</td>
-<td align="center">数组+双向链表+红黑树</td>
-<td align="center">否</td>
-<td align="center"></td>
-<td align="center">输出和输入的顺序相同</td>
-</tr>
-</tbody></table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java API</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/编程//" class="article-tag-list-link color3">编程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/22/Map%E6%8E%A5%E5%8F%A3-04/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java线程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/22/Java%E7%BA%BF%E7%A8%8B/">Java线程</a>
-    </h1>
-  
-
-        
-        <a href="/2021/04/22/Java%E7%BA%BF%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2021-04-22T14:14:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="线程、进程和协程"><a href="#线程、进程和协程" class="headerlink" title="线程、进程和协程"></a>线程、进程和协程</h3><p><strong>进程————打开百度网盘</strong><br>就是应用程序的启动实例，就是运行中的程序，比如说打开了软件，打开一个游戏就是开启了一个进程，进程能够拥有代码和打开的文件资源、数据资源、独立的内存空间<br>进程就包含自身的产生、存在和消亡的过程</p>
-<p><strong>线程————启动一个下载任务</strong><br>属于进程，线程是进程创建的，线程是进程的一部分，并且拥有自己独立的栈空间；<br>线程是最小执行单元，进程是最小的资源管理单元<br><strong>通常所说的五大状态都是线程所拥有的：初始化，就绪，运行，阻塞，销毁</strong></p>
-<p><strong>线程和进程的区别</strong></p>
-<ul>
-<li>两者最主要的区别就是操作系统对其不同的资源管理方式</li>
-<li>一段程序启动后自动创建了一个进程，进程拥有独立的地址空间</li>
-<li>线程可以算作是进程的一部分，线程拥有自己的堆栈空间，多个线程共享内存</li>
-<li>进程之间的切换对资源消耗大，而线程之间的切换效率较高，对于要求的并发量大的操作，只能用线程</li>
-</ul>
-<p>JVM通过调用os内核中的TCB（线程控制模块）来改变线程的状态，过程耗费CPU资源；<br>并且根据生产者消费者算法（全部生产者线程组成进程），要设置同步锁和线程之间状态的转换，这就很耗费性能；</p>
-<p><strong>协程就是轻量级线程</strong><br>线程可以有多个协程，比如在主线程中生产数据，在协程中消费数据，<strong>协程暂停完全可以由程序控制，而不需要操作系统内核来切换，开销很小</strong></p>
-<p><strong>协程就是减少了线程的切换，速度更快</strong><br>例如python中的yield关键字，是程序强制等待而不是操作系统决定的，这样在内部的分配就不用了上锁和互斥的添加</p>
-<h3 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h3><p>并发：同一时刻，多个任务交替进行，单核CPU实现多任务</p>
-<p>并行：同一时刻，多个任务同时执行，多核CPU可以实现并行</p>
-<p>并发和并行同时存在</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Runtime runtime &#x3D; Runtime.getRuntime();</span><br><span class="line">int cpuNums&#x3D;runtime.availableProcessors();</span><br><span class="line">&#x2F;&#x2F;获取此电脑CPU数量</span><br></pre></td></tr></table></figure>
-<h3 id="进程调度算法"><a href="#进程调度算法" class="headerlink" title="进程调度算法"></a>进程调度算法</h3><ul>
-<li>先来先服务调度算法</li>
-<li>短作业优先调度算法<br>不能保证紧迫性进程及时处理</li>
-<li>优先级调度算法<br>非抢占式：分配给cpu后，就完全按照优先级调度<br>抢占式：执行期间如果出现了另一个更高优先级的进程，进程调度立即停止</li>
-<li>高响应比优先调度算法<br>R=（等待时间+要求服务时间）/要求服务时间<br>好处在于，当等待时间相同时，要求服务时间越小，R越大，有利于短作业优先<br>当要求服务时间相同时，等待时间越大，R越大，有利于先来的先处理</li>
-<li>时间片轮转调度算法<br>用完了规定的时间片，但是任务未完成，自行释放占有的CPU，到就绪队列等待</li>
-<li>多级反馈队列</li>
-</ul>
-<h3 id="进程间通信方式"><a href="#进程间通信方式" class="headerlink" title="进程间通信方式"></a>进程间通信方式</h3><h3 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h3><p><strong>因为Thread类实现了Runnable接口</strong></p>
-<ul>
-<li>继承Thread类，重写run方法</li>
-<li>实现Runnable接口，重写run方法</li>
-</ul>
-<p>针对程序来说：main线程作为主线程和子线程Thread-0、Thread-1…交替进行</p>
-<p><strong>因此不一定是主方法main线程结束整个程序就会结束</strong></p>
-<p><em>利用JConsole（Terminal终端界面输入命令）监控线程的执行</em></p>
-<ul>
-<li>因为Java是单继承的，当该类已经继承了父类，这时只能通过实现接口来完成线程创建</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Dog dog &#x3D; new Dog();&#x2F;&#x2F;创建的对象可以当作线程使用</span><br><span class="line">        &#x2F;&#x2F;dog.start();</span><br><span class="line">        Thread thread&#x3D;new Thread(dog);&#x2F;&#x2F; 表示线程启动</span><br><span class="line">        thread.start();</span><br><span class="line">        </span><br><span class="line">class Dog implements Runnable&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for(int i&#x3D;0;i&lt;5;i++)&#123;</span><br><span class="line">            System.out.println(&quot;汪汪&quot;);</span><br><span class="line">            try &#123;&#x2F;&#x2F;alt+ctrl+t获取快捷创建try&#x2F;catch块</span><br><span class="line">                Thread.sleep(1000);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br></pre></td></tr></table></figure>
-
-<p>继承Runnable接口的线程，要通过创建Thread类将该线程对象放入Thread中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Dog dog &#x3D; new Dog();&#x2F;&#x2F;创建的对象可以当作线程使用</span><br><span class="line">        &#x2F;&#x2F;dog.start();</span><br><span class="line">        Thread thread&#x3D;new Thread(dog);&#x2F;&#x2F; 表示线程启动</span><br><span class="line">        thread.start();</span><br></pre></td></tr></table></figure>
-<p><strong>这里用到了代理模式</strong></p>
-<h3 id="线程执行"><a href="#线程执行" class="headerlink" title="线程执行"></a>线程执行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Dog dog &#x3D; new Dog();&#x2F;&#x2F;创建的对象可以当作线程使用</span><br><span class="line">dog.start();&#x2F;&#x2F;表示线程启动</span><br><span class="line">        </span><br><span class="line">class Dog extends Thread&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for(int i&#x3D;0;i&lt;1000;i++)&#123;</span><br><span class="line">            System.out.println(&quot;汪汪&quot;);</span><br><span class="line">            try &#123;&#x2F;&#x2F;alt+ctrl+t获取快捷创建try&#x2F;catch块</span><br><span class="line">                Thread.sleep(10000);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>为什么要通过start()方法来调用线程中的run()方法呢？</strong></p>
-<p>因为run()就是普通的方法，如果直接调用run()那么子线程中未结束的话，作为主线程中的调用一部分，主线程绝对不会结束，只能是串行化执行</p>
-<h3 id="start-方法源码解读"><a href="#start-方法源码解读" class="headerlink" title="start()方法源码解读"></a>start()方法源码解读</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public synchronized void start() &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>start0()方法是native方法，也就是start0()是真正实现多线程的方法，所以启动多线程不是run()</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private native void start0();&#x2F;&#x2F;通过JVM调用C C++</span><br></pre></td></tr></table></figure>
-<p>start()调用start0()方法后，该线程不会立刻执行而是变成了可与行状态，具体什么时候执行，由CPU调度</p>
-<p>start0()的具体执行和os有关</p>
-<h3 id="Synchronized关键字"><a href="#Synchronized关键字" class="headerlink" title="Synchronized关键字"></a>Synchronized关键字</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">线程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/22/Java%E7%BA%BF%E7%A8%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SpringMVC探究-01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/22/SpringMVC%E6%8E%A2%E7%A9%B6-01/">SpringMVC探究-01</a>
-    </h1>
-  
-
-        
-        <a href="/2021/04/22/SpringMVC%E6%8E%A2%E7%A9%B6-01/" class="archive-article-date">
-  	<time datetime="2021-04-22T14:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="理解SpringMVC"><a href="#理解SpringMVC" class="headerlink" title="理解SpringMVC"></a>理解SpringMVC</h3><p>SpringMVC就是基于Java实现的MVC模式的轻量级Web框架，这里将Module模型、View视图、Controller控制器分离，解耦合并且通过统一的DispatcherSerblet来管理，并且保留了Spring中面向切面编程和控制反转的优点</p>
-<h3 id="SpringMVC的工作原理"><a href="#SpringMVC的工作原理" class="headerlink" title="SpringMVC的工作原理"></a>SpringMVC的工作原理</h3><ul>
-<li>SpringMVC的工作核心都是由DispatcherServlet完成的，客户端的所有请求都会交给DispatcherServlet来处理，并且由DispatcherServlet来调用其他模块</li>
-<li>DispatcherServlet接收到了用户的请求后，根据发送过来的URL地址，交给HandlerMapping来获取相应的Handler处理器，并返回给DispatcherServlet</li>
-<li>DispatcherServlet将接收到的Handler交给HandlerAdapter处理器适配器，适配器调用具体的Handler方法返回一个ModelandView对象，ModelandView包含了数据以及对应的视图信息</li>
-<li>将ModelandView返回给DispatcherServlet后，还要借助ViewResolver(视图解析器)进行逻辑视图到真实视图的解析工作</li>
-<li>返回真正的View对象发送给客户端</li>
-</ul>
-<h3 id="web-xml配置"><a href="#web-xml配置" class="headerlink" title="web.xml配置"></a>web.xml配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet&gt;</span><br><span class="line">        &lt;servlet-name&gt;SpringMVC&lt;&#x2F;servlet-name&gt;</span><br><span class="line">        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet</span><br><span class="line">        &lt;&#x2F;servlet-class&gt;</span><br><span class="line">        &lt;!-- 当applicationContext.xml放在src 下时要特别声明一下，如果不声明，则默认视图配置文件的命名方式为 SpringMVC-servlet.xml--&gt;</span><br><span class="line">        &lt;init-param&gt;&#x2F;&#x2F;用于DispatcherServlet绑定SpringMVC的配置文件</span><br><span class="line">        &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">        &lt;param-value&gt;classpath:applicationContext.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">        &lt;&#x2F;init-param&gt;</span><br><span class="line">        &lt;load-on-startup&gt;1&lt;&#x2F;load-on-startup&gt;</span><br><span class="line">        </span><br><span class="line">    &lt;&#x2F;servlet&gt;</span><br><span class="line"></span><br><span class="line">    &lt;servlet-mapping&gt;</span><br><span class="line">        &lt;servlet-name&gt;SpringMVC&lt;&#x2F;servlet-name&gt;</span><br><span class="line">        &lt;url-pattern&gt;*.do&lt;&#x2F;url-pattern&gt;</span><br><span class="line">    &lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><url-pattern>标签中由多种写法：<br>&nbsp;&nbsp;&nbsp;/ 只匹配所有的请求，不会匹配jsp界面<br>&nbsp;&nbsp;&nbsp;/* 匹配所有的请求，包括JSP，这样.jsp后缀无限嵌套</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java-EE//" class="article-tag-list-link color3">Java EE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/22/SpringMVC%E6%8E%A2%E7%A9%B6-01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-自动化测试简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/22/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%AE%80%E4%BB%8B/">自动化测试简介</a>
-    </h1>
-  
-
-        
-        <a href="/2021/04/22/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%AE%80%E4%BB%8B/" class="archive-article-date">
-  	<time datetime="2021-04-22T14:12:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/22/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%AE%80%E4%BB%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Linux常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/22/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Linux常用命令</a>
-    </h1>
-  
-
-        
-        <a href="/2021/04/22/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
-  	<time datetime="2021-04-22T14:12:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/04/22/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
@@ -1326,15 +1352,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">线程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Java API</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1346,15 +1368,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Java API</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Spring</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">查找</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1366,10 +1384,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">笔试习题</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">粤语歌</a>
               </li>
              
@@ -1378,11 +1392,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">笔试习题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">计算机基本知识</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">查找</a>
               </li>
              
               <li class="article-tag-list-item">
